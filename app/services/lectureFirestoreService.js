@@ -1,0 +1,219 @@
+
+import { setDoc,doc,query,collection,getDocs,where, updateDoc,getDoc} from 'firebase/firestore'
+
+import { db } from '@/utils/firebase/firebaseUtils'
+
+
+//  const sessionId=`${subjectCode}${Date.now()}`
+
+ export const addSessions=async({sessionId,  formField, lecturerId })=>{
+    const { subjectCode, subjectName,  date,
+        time } = formField;
+   
+    
+    try {
+
+      
+
+
+      await setDoc(doc(db, "sessions",sessionId), {
+        subjectName,
+        subjectCode,
+        date,
+        time,
+        status:true,
+        lecturerId,
+        createdAt: new Date(),
+      });
+
+      console.log("User document created in Firestore from session");
+    } catch (error) {
+      console.log("Error creating Session", error);
+    }
+
+
+ }
+
+export const addAttendance=async ({sessionId,  formField, lecturerId })=>{
+    const { subjectCode, 
+   } = formField;
+
+    
+    const subjectQuery = query(
+        collection(db, 'subjects'),
+        where('code', '==', subjectCode)
+      );
+      
+      try {
+        const subjectSnapshot = await getDocs(subjectQuery);
+        let students ={} ;
+        
+        if (subjectSnapshot.empty) {
+          console.log("No matching documents.");
+        } else {
+
+        let courseId;
+        subjectSnapshot.forEach((doc) => {
+         courseId= doc.data().courseId});
+         console.log("course Id",courseId)
+         const courseQuery = query(
+                    collection(db, 'courses'),
+                    where('id', '==',courseId))
+
+         const courseSnapshot = await getDocs(courseQuery);
+         let courseName;
+         courseSnapshot.forEach((doc) => {
+            courseName=doc.data().name})
+         console.log("Course name",courseName)
+
+
+         const studentQuery = query(
+                  collection(db, "users"),
+                  where("userRole", "==", "student"),
+                  where("course", "==", courseName)
+                );
+                const studentSnapshot = await getDocs(studentQuery);
+
+
+             
+
+
+                studentSnapshot.forEach((doc) => {
+                students[doc.data().userID] = false
+                      
+                    });
+                    console.log(students);
+               
+
+        }
+      
+        
+     
+        await setDoc(doc(db, "attendance", sessionId), {
+          courseCode: subjectCode,
+          lectureCode: lecturerId ,
+          sessionId: sessionId,
+          attendance: students,
+          createdAt: new Date()
+        });
+  
+        console.log("Attendance document created in Firestore");
+      } catch (error) {
+        console.log("Error creating attendance document", error);
+      }
+
+
+   } 
+
+export const fetchSessions = async ({lecturerId}) => {
+    const sessionQuery=query(collection(db,'sessions'),
+      where('lecturerId','==',lecturerId),
+      
+     )
+
+    const querySnapshot = await getDocs( sessionQuery);
+
+    const sessionsData = [];
+    querySnapshot.forEach((doc) => {
+      sessionsData.push({ id: doc.id, ...doc.data() });
+    });
+
+    return sessionsData ;
+  };
+
+  export const updateSessionStatus = async ({ sessionID }) => {
+    if (!sessionID) {
+      throw new Error("Session ID is required to update session status.");
+    }
+  
+    const sessionRef = doc(db, 'sessions', sessionID);
+    try {
+      await updateDoc(sessionRef, {
+        status: false
+      });
+      console.log('Session status updated successfully');
+    } catch (error) {
+      console.error('Error updating session status:', error);
+    }
+  }
+
+
+  export const fetchSessionsHistory = async ({lecturerId}) => {
+    const sessionQuery=query(collection(db,'sessions'),
+      where('lecturerId','==',lecturerId),
+      where('status','==',false) )
+
+    const querySnapshot = await getDocs( sessionQuery);
+
+    const sessionsData = [];
+    querySnapshot.forEach((doc) => {
+      sessionsData.push({ id: doc.id, ...doc.data() });
+    });
+
+    return sessionsData ;
+  };
+
+
+  export const fetchAttendance=async()=>{
+    const attendanceQuery=query(collection(db,'attendance'),
+    where('lectureCode',"==",'lec003'))
+
+    const querySnapshot = await getDocs(  attendanceQuery);
+    const attendanceData=[];
+    querySnapshot.forEach((doc)=>{
+      attendanceData.push({id:doc.id,...doc.data()})
+    })
+    console.log("from fuction",attendanceData)
+    return attendanceData
+
+   
+
+  }
+
+  export const fetchLecTimetable=async()=>{
+    try {
+      const timetablesCollection = collection(db, "timetables");
+      const q = query(timetablesCollection);
+      const querySnapshot = await getDocs(q);
+  
+      const lecturerTimetable = [];
+  
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        data.schedule.forEach(scheduleItem => {
+          if (scheduleItem.lectureID === 'lec003') {
+            lecturerTimetable.push({
+              courseId: data.courseId,
+              departmentId: data.departmentId,
+              ...scheduleItem
+            });
+          }
+        });
+      });
+  
+      return lecturerTimetable;
+    } catch (error) {
+      console.error("Error retrieving timetable: ", error);
+      return [];
+    }
+
+
+  }
+
+  export const updateStudentAttendance=async(studentId,attendanceId)=>{
+    // console.log("attendance Id",attendanceId)
+      try {
+        const attendanceRef = doc(db, 'attendance', attendanceId);
+        const docSnap = await getDoc(attendanceRef);
+        if (!docSnap.exists()) {
+          throw new Error(`No document to update: ${attendanceId}`);
+        }
+        await updateDoc(attendanceRef, {
+          [`attendance.${studentId}`]: true
+        });
+        console.log(`Attendance updated successfully for student ID: ${studentId}`);
+      } catch (error) {
+        console.log(`Failed to update attendance in firestore: ${error}`);
+      }
+    }
+  
