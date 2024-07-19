@@ -27,16 +27,16 @@ const DashboardCard = ({cardData}) => {
     {cardData.map((item, index) => {
       const IconComponent = iconMap[item.icon];
         return (
-          <Card key={index} className={`shadow-sm ${item.bgColor} ${item.textColor}`} x-chunk="dashboard-01-chunk-0" >
+          <Card key={index} className={`shadow-sm ${item.bgColor} ${item.textColor} `} x-chunk="dashboard-01-chunk-0" >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-[#E5E7EB]">
                 {item.Cardtitile}
               </CardTitle>
-              {IconComponent && <IconComponent className="h-4 w-4 text-muted-foreground " color="#FBF6FE"/>}
+              {IconComponent && <IconComponent className="h-8 w-8 text-muted-foreground " color="#FBF6FE"/>}
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{item.Cardcontent}</div>
-              <p className="text-xs  before:text-white">
+              <div className={`text-2xl font-bold  `}>{item.Cardcontent}</div>
+              <p className="text-xs  before:text-white text-[#E5E7EB]">
                 {item.Cardsubtext}
               </p>
             </CardContent>

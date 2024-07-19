@@ -44,6 +44,7 @@ const subjects = [
   }
 ];
 
+
 const SubjectTable = () => {
   return (
     <Table>

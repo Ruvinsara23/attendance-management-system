@@ -36,7 +36,7 @@ const handlFinish=async()=>{
 
   return (
     <div>
-    <Card className='bg-[#86EFAC]'>
+    <Card className='mb-4  bg-[#FBF6FE] rounded-[16px] shadow-xl border-[#cf70ec] p-4 pb-0'>
     <CardContent className="p-4">
       <div className="flex items-center justify-between mb-2">
         <div className="font-semibold">{session.subjectName}</div>
@@ -52,7 +52,7 @@ const handlFinish=async()=>{
       {showActions && (
       <div className="flex justify-between mb-2">
       
-        <Button variant="outline" size="sm">
+        <Button variant="secondary" size="sm">
           Cancel
         </Button>
         <Button onClick={handleAction}  size="sm">

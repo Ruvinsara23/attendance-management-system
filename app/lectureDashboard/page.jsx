@@ -62,22 +62,34 @@ const cardData = [
   {
     "Cardtitile": "Total Present",
     "Cardcontent": 0,
-    "Cardsubtext": "In today sessions"
+    "Cardsubtext": "In today sessions",
+    icon:"UserRoundPlus",
+    bgColor: "bg-[#86EFAC]", // Background color class
+    textColor: "text-white"
   },
   {
     "Cardtitile": "Total Absent",
     "Cardcontent":0,
-    "Cardsubtext": "In today sessions"
+    "Cardsubtext": "In today sessions",
+    icon:"UserRoundMinus",
+    bgColor: "bg-[#FCD34D]", // Background color class
+    textColor: "text-white"
   },
   {
     "Cardtitile": "Upcoming Session",
     "Cardcontent": "ICT-211",
-    "Cardsubtext": "2024-07-4 10:00 AM"
+    "Cardsubtext": "2024-07-4 10:00 AM",
+    icon:"CalendarPlus",
+    bgColor: "bg-[#93C5FD]", // Background color class
+    textColor: "text-white"
   },
   {
     "Cardtitile": "Number of Upcoming sessions Appointments",
     "Cardcontent": "3",
-    "Cardsubtext": "Overview of Appointments"
+    "Cardsubtext": "Overview of Appointments",
+    icon:"CalendarCheck2",
+    bgColor: "bg-[#B270EC]", // Background color class
+    textColor: "text-white"
   }
 ];
 
@@ -185,7 +197,7 @@ const updateCardData = async () => {
           </CardContent>
         </Card>
         <div className="grid gap-6">
-        <Card className="w-full max-w-[530px]">
+        <Card className="w-full max-w-[530px] rounded-[16px] border-[#cf70ec] ">
           <CardHeader>
             <CardTitle>Upcoming Appointment</CardTitle>
           </CardHeader>
@@ -210,7 +222,7 @@ const updateCardData = async () => {
                 <div className="text-muted-foreground">3:00 PM - 4:00 PM</div>
               </div>
             </div>
-            <Button variant="outline" className="justify-self-end">
+            <Button variant="secondary" className="justify-self-end ">
               Cancel Appointment
             </Button>
           </CardContent>
@@ -241,7 +253,6 @@ const updateCardData = async () => {
             <Button className="w-full">Schedule Session</Button>
           </CardContent>
         </Card>
-        <AddData />
       </div>
       </div>
     </main>

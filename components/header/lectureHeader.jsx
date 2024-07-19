@@ -32,7 +32,7 @@ const LectureHeader = () => {
  }
 
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-4 border-b  px-4 md:px-6 bg-[#F3E2FD]">
+    <header className="sticky top-0 flex h-16 items-center gap-4 border-b  px-4 md:px-6 bg-[#FBF6FE]">
       <NavBar data={navLinks}/>
       <Sheet>
         <SheetTrigger asChild>

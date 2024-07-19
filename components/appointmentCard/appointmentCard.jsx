@@ -42,16 +42,25 @@ const AppointmentCard = ( {
     <Card className="mb-4  bg-[#FBF6FE] rounded-[16px] shadow-xl border-[#cf70ec] p-4 pb-0">
     <CardContent className="p-4">
       <div className="flex items-center justify-between mb-2">
-        <div className="font-semibold flex items-center ">  <Avatar className='mr-3' >
+        <div className="font-semibold flex items-center "> 
+         <Avatar className='mr-3' >
         <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
         <AvatarFallback>CN</AvatarFallback>
-      </Avatar>{isStudent === true ? studentName:lecturer }</div>
+      </Avatar>
+      <div className="grid gap-1">
+                <div className="font-medium">{isStudent === true ? studentName:lecturer }</div>
+                <div className="text-muted-foreground">{studentId}</div>
+              </div></div>
         <div className={`px-2 py-1 rounded-full text-xs font-medium ${statusClasses[status]}`}>
             {status}
           </div>
       </div>
-      <div className="text-sm text-gray-500 mb-1">{studentId}</div>
-      <div className="text-sm text-gray-500 mb-4 flex items-center"><Calendar className='mr-3' /> {date} <Clock className='mr-3 ml-5' />{time}</div>
+      
+      <div className="text-sm text-gray-500 mb-4 flex items-center"><Calendar className='m-3 ml-0 w-7 h-7 text-muted-foreground' /> 
+      <div>
+                <div className="font-medium">{date}</div>
+                <div className="text-muted-foreground">{time}</div>
+              </div></div>
       <div className="font-semibold">{subject}</div>
       <div className={`text-sm text-gray-500 mb-5 ${showFullMessage ? '' : 'truncate'}`}>
       {message.length > 5 && (
