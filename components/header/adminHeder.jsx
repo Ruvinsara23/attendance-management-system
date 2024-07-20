@@ -40,7 +40,7 @@ const AdminHeader = () => {
 
 //  console.log(,"This is user after log out");
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-[#F3E2FD]  px-4 md:px-6">
+    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-[#FBF6FE]  px-4 md:px-6">
     <NavBar data={navLinks} />
     <Sheet>
       <SheetTrigger asChild>
@@ -63,7 +63,7 @@ const AdminHeader = () => {
         </nav>
       </SheetContent>
     </Sheet>
-    <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 bg-[#F3E2FD]">
+    <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 bg-[#FBF6FEb]">
       <SearchBar />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

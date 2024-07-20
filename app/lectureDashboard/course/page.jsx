@@ -76,9 +76,9 @@ const LectureCoursesPage = () => {
 const [timeTable,setTimetable]=useState([]);
 
 const fetchAndSetLecTimetable=async()=>{
-  const lecTimeTableDate=await fetchLecTimetable();
-  setTimetable(lecTimeTableDate);
-  console.log("timetable details from courses",lecTimeTableDate)
+  const lecTimeTableData=await fetchLecTimetable();
+  setTimetable(lecTimeTableData);
+  console.log("timetable details from courses",lecTimeTableData)
 
 
 }

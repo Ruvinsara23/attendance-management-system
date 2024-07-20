@@ -11,7 +11,7 @@ import { logout } from '@/utils/firebase/firebaseUtils';
 
 const navLinks = [
   { href: '/lectureDashboard', text: 'Dashboard', className: '' },
-  { href: '/lectureDashboard/course', text: 'Courses', className: 'text-muted-foreground' },
+  { href: '/lectureDashboard/course', text: 'Subjects', className: 'text-muted-foreground' },
   { href: '/lectureDashboard/appointment', text: 'Appointment', className: 'text-muted-foreground' },
   { href: '/lectureDashboard/profile', text: 'Profile', className: 'text-muted-foreground' },
   { href: '/lectureDashboard/session', text: 'Session', className: 'text-muted-foreground' },
@@ -55,7 +55,7 @@ const LectureHeader = () => {
           </nav>
         </SheetContent>
       </Sheet>
-      <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 bg-[#F3E2FD]">
+      <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 bg-[#FBF6FE]">
         <SearchBar />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

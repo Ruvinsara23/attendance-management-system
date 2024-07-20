@@ -3,8 +3,7 @@ import CreateUser from '@/components/createUserForm/createUser'
 
 const userManagement = () => {
   return (
-    <div>
-    <h1>This is user </h1>
+    <div className='m-8 flex items-center'>
       <CreateUser />
     </div>
   )

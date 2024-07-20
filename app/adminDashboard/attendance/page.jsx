@@ -39,48 +39,50 @@ const page = () => {
 
   const filterData = () => {
     let data = [...attendanceData];
-
+   console.log("data before filter",data)
     if (dateRange[0] && dateRange[1]) {
       const [startDate, endDate] = dateRange;
       data = data.filter(item => {
         const itemDate = new Date(item.date);
-        return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
+        return itemDate >= startDate && itemDate <= endDate;
       });
     }
-
+  
     if (subject && subject !== 'all') {
-      data = data.filter(item => item.courseCode === subject);
+      data = data.filter(item => item.subjectCode === subject);
     }
-
+  
     if (department && department !== 'all') {
       data = data.filter(item => item.department === department);
     }
-
+  
     if (status && status !== 'all') {
-        data = data.map(item => {
-            const filteredAttendance = Object.fromEntries(
-                Object.entries(item.attendance).filter(([studentId, attended]) => {
-                    if (status === 'present') {
-                        return attended === true;
-                    } else if (status === 'absent') {
-                        return attended === false;
-                    }
-                    return true;
-                })
-            );
-            return { ...item, attendance: filteredAttendance };
-        });
+      data = data.map(item => {
+        const filteredAttendance = Object.fromEntries(
+          Object.entries(item.attendance).filter(([studentId, attended]) => {
+            if (status === 'present') {
+              return attended === true; // Filter for present
+            } else if (status === 'absent') {
+              return attended === false; // Filter for absent
+            }
+            return true; // For 'all' status
+          })
+        );
+        return { ...item, attendance: filteredAttendance };
+      });
     }
-
- console.log("This is from report ",data)
+  
+    console.log("This is from report ", data);
     setFilteredData(data);
   };
+
+ 
 
   const downloadReport = () => {
     // Implement download report logic
   };
 
-  const uniqueSubjects = ['all', ...new Set(attendanceData.map(item => item.courseCode))];
+  const uniqueSubjects = ['all', ...new Set(attendanceData.map(item => item.subjectCode))];
   const uniqueDepartments = ['all', ...new Set(attendanceData.map(item => item.department))];
        
          

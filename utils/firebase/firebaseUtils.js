@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import {getAuth,signWithRedirect,signInWithPopup, GoogleAuthProvider,signInWithEmailAndPassword,signOut
+import {getAuth,signWithRedirect,signInWithPopup, GoogleAuthProvider,signInWithEmailAndPassword,signOut,onAuthStateChanged
 } from 'firebase/auth'
 import {getFirestore,doc,getDoc,setDoc} from 'firebase/firestore'
 
@@ -40,6 +40,9 @@ export const signInWithEmail=(email, password)=>signInWithEmailAndPassword(auth,
 
 
 export const signInWithGooglePopup=()=>signInWithPopup(auth,provider)
-export const logout = () => {
-    return signOut(auth,provider);
+
+export const onAuthStateChangedListner=(callback)=>onAuthStateChanged(auth,callback)
+
+export const logout = async() => {
+    return await signOut(auth,provider);
   };

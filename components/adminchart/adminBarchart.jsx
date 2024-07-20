@@ -62,6 +62,7 @@ export function AdminBarChart() {
 
   const getAndSetChartData = async () => {
     const getData = await getAttendanceCountsByDepartment();
+    console.log('getData',getData)
 
     const formattedData = getData.map(dept => ({
       department: dept.department,
@@ -88,8 +89,8 @@ export function AdminBarChart() {
             <CartesianGrid vertical={false} />
             <XAxis dataKey="department" tickLine={false} tickMargin={10} axisLine={false} />
             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dashed" />} />
-            <Bar dataKey="present" fill="var(--chart-1)" radius={4} />
-            <Bar dataKey="absent" fill="var(--chart-2)" radius={4} />
+            <Bar dataKey="present" fill="#914ADB" radius={4} />
+            <Bar dataKey="absent" fill="#6418C3" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>

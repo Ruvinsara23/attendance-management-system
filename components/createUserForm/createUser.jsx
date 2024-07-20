@@ -13,6 +13,8 @@ import { setDoc,doc,query,collection,getDocs,where, updateDoc} from "firebase/fi
 import { fetchDepartmentsAndCourses } from "@/app/services/adminFirestoreService"
 import QRCode from 'qrcode';
 
+import * as style from '@dicebear/adventurer';
+
 
 const defaultFormFields={
     userName:'',
@@ -25,7 +27,8 @@ const defaultFormFields={
     email:'',
     phoneNumber:'',
     academicYear:'',
-    qrCodeUrl:''
+    qrCodeUrl:'',
+    photoUrl:''
 
 }
 
@@ -39,7 +42,7 @@ const CreateUser=()=> {
   const [courses, setCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
 
-    const {userName, userRole,userID,department,course,email,dateOfBirth,address,phoneNumber,academicYear}= formFields;
+    const {userName, userRole,userID,department,course,email,dateOfBirth,address,phoneNumber,academicYear,photoUrl}= formFields;
 
    
 
@@ -103,6 +106,17 @@ const createUserID = async (department, academicYear) => {
   return `stu${department}${academicYear.slice(-2)}${newUserIDNumber}`;
 };
 
+// function generateAvatar(userName) {
+//   const svg = createAvatar(style, {
+//     seed: userName,
+//     backgroundColor: ['b6e3f4', 'c0aede', 'd1d4f9'],
+//   });
+//   // Convert SVG to a Data URI
+//   const svgDataUri = `data:image/svg+xml;base64,${btoa(svg)}`;
+//   return svgDataUri;
+// }
+
+
 const generateTempPassword=()=>Math.random().toString(36).slice (-8)
 
 const createUser =async ()=> {
@@ -129,6 +143,7 @@ try {
       phoneNumber,
       academicYear,
       qrCodeUrl,
+      photoUrl,
       createdAt: new Date().toISOString(),
     });
 
@@ -156,7 +171,7 @@ const handleSubmit = async (event) => {
 
 
     return (
-      <Card className="w-full max-w-2xl">
+      <Card className="w-full max-w-2xl border-black">
         <CardHeader>
           <CardTitle>Create User</CardTitle>
           <CardDescription>Add a new user.</CardDescription>

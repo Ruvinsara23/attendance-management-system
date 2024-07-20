@@ -20,6 +20,7 @@ const TimeTable = ({ timeTable}) => {
             <TableHead >Date </TableHead>
             <TableHead >Time</TableHead>
             
+            
           </TableRow>
         </TableHeader>
         <TableBody className='text-[#6B7280]' >

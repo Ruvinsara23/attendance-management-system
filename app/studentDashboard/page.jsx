@@ -56,16 +56,16 @@ const cardData = [
     "Cardtitile": "Total Present",
     "Cardcontent": 0,
     "Cardsubtext": "this semester",
-     icon:"UserRoundPlus",
-     bgColor: "bg-[#86EFAC]", // Background color class
+      icon:"UserRoundPlus",
+     bgColor: "bg-[#86EFAC]", 
      textColor: "text-white" 
   },
   {
     "Cardtitile": "Total Absent",
     "Cardcontent": 0,
     "Cardsubtext": "this semester",
-    icon:"UserRoundMinus",
-    bgColor: "bg-[#FCD34D]", // Background color class
+     icon:"UserRoundMinus",
+    bgColor: "bg-[#FCD34D]", 
     textColor: "text-white" 
   },
   {
@@ -73,15 +73,15 @@ const cardData = [
     "Cardcontent": "ICT-211",
     "Cardsubtext": "4-date",
     icon:"CalendarPlus",
-    bgColor: "bg-[#93C5FD]", // Background color class
+    bgColor: "bg-[#93C5FD]", 
     textColor: "text-white" 
   },
   {
     "Cardtitile": "Number of Appointments",
     "Cardcontent": "3",
     "Cardsubtext": "Overview of Appointments",
-    icon:"CalendarCheck2",
-    bgColor: "bg-[#B270EC]", // Background color class
+     icon:"CalendarCheck2",
+    bgColor: "bg-[#B270EC]",
     textColor: "text-white"
   }
 ];

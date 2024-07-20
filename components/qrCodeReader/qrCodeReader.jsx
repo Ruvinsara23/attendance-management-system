@@ -51,7 +51,7 @@ const handleError = (err) => {
       onScan={handleScan}
       style={previewStyle}
     />
-    <p>{studentId}</p>
+    <p></p>
   </div>
     </div>
   )

@@ -20,53 +20,57 @@ import { getUserCounts } from '../services/adminFirestoreService'
 
 
 
-const cardData = [
-  {
-    "Cardtitile": "Total Present",
-    "Cardcontent": 0,
-    "Cardsubtext": "In today sessions",
+// const cardData = [
+//   {
+//     "Cardtitile": "Total Present",
+//     "Cardcontent": 0,
+//     "Cardsubtext": "In today sessions",
+//     bgColor: "bg-[#86EFAC]"
    
-  },
-  {
-    "Cardtitile": "Total Absent",
-    "Cardcontent":0,
-    "Cardsubtext": "In today sessions",
-    bgColor: "bg-blue-500", // Background color class
-    textColor: "text-white" 
+//   },
+//   {
+//     "Cardtitile": "Total Absent",
+//     "Cardcontent":0,
+//     "Cardsubtext": "In today sessions",
+//    bgColor: "bg-[#FCD34D]", // Background color class
+//     textColor: "text-white" 
 
-  },
-  {
-    "Cardtitile": "Upcoming Session",
-    "Cardcontent": "ICT-211",
-    "Cardsubtext": "2024-07-4 10:00 AM",
-    bgColor: "bg-blue-500", // Background color class
-    textColor: "text-white" 
-  },
-  {
-    "Cardtitile": "Number of Upcoming sessions Appointments",
-    "Cardcontent": "3",
-    "Cardsubtext": "Overview of Appointments",
-    bgColor: "bg-blue-500", // Background color class
-    textColor: "text-white" 
-  }
-];
+//   },
+//   {
+//     "Cardtitile": "Upcoming Session",
+//     "Cardcontent": "ICT-211",
+//     "Cardsubtext": "2024-07-4 10:00 AM",
+//     bgColor: "bg-[#93C5FD]", // Background color class
+//     textColor: "text-white" 
+//   },
+//   {
+//     "Cardtitile": "Number of Upcoming sessions Appointments",
+//     "Cardcontent": "3",
+//     "Cardsubtext": "Overview of Appointments",
+//     bgColor: "bg-[#B270EC]", // Background color class
+//     textColor: "text-white" 
+//   }
+// ];
 
 const page = () => {
   const [cardData, setCardData] = useState([
     {
       "Cardtitile": "Total Students",
       "Cardcontent": 0,
-      "Cardsubtext": "In today sessions"
+      "Cardsubtext": "In today sessions",
+      bgColor: "bg-[#86EFAC]"
     },
     {
       "Cardtitile": "Total Lecturers",
       "Cardcontent": 0,
-      "Cardsubtext": "In today sessions"
+      "Cardsubtext": "In today sessions",
+      bgColor: "bg-[#FCD34D]"
     },
     {
       "Cardtitile": "Total Admins",
       "Cardcontent": 0,
-      "Cardsubtext": "In today sessions"
+      "Cardsubtext": "In today sessions",
+      bgColor: "bg-[#93C5FD]"
     },
   ]);
 

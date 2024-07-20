@@ -6,11 +6,12 @@ import { Table,TableBody, TableCell,TableHead, TableHeader,TableRow } from "@/co
 
 
   const formatCreatedAt = (createdAt) => {
-    const date = new Date(createdAt.seconds * 1000 + createdAt.nanoseconds / 1000000);
+    const date = new Date(createdAt);
     return date.toLocaleString(); 
   };
  
 const AttendanceTable = ({attendanceData,studentIdFilter}) => {
+  console.log("from attendance table admin datad=aset ,",attendanceData)
 
     return (
       <div className="custom-scrollbar overflow-x-auto overflow-y-auto max-h-96"> 
@@ -28,11 +29,11 @@ const AttendanceTable = ({attendanceData,studentIdFilter}) => {
         {attendanceData.map((attendance) => (
           Object.entries(attendance.attendance).map(([studentId, status]) => (
             (!studentIdFilter || studentId === studentIdFilter) &&   (
-              <TableRow key={attendance.sessionId} className="bg-gradient-to-r from-pink-50 via-fuchsia-100 to-fuchsia-50 border-[#EBCFFC]">
+              <TableRow  key={`${attendance.id}-${studentId}`}  className="bg-gradient-to-r from-pink-50 via-fuchsia-100 to-fuchsia-50 border-[#EBCFFC]">
                 <TableCell>
                   <div className="font-medium">{studentId}</div>
                 </TableCell>
-                <TableCell>{attendance.courseCode}</TableCell>
+                <TableCell>{attendance.subjectCode}</TableCell>
                 <TableCell>
                   <Badge className={`text-xs ${status ? ' bg-green-500/20 px-3 py-1 text-xs font-normal text-green-500' : 'bg-red-500/20 text-red-500'}`} variant="outline">
                     {status ? 'Present' : 'Absent'}

@@ -69,8 +69,8 @@ export const getAttendanceCountsByDepartment=async () =>{
    
     attendanceSnapshot.forEach(doc => {
       const attendanceData = doc.data();
-      if (attendanceData && attendanceData.attendance && attendanceData.courseCode) {
-        const subjectCode = attendanceData.courseCode; 
+      if (attendanceData && attendanceData.attendance && attendanceData.subjectCode) {
+        const subjectCode = attendanceData.subjectCode; 
         const courseId = subjects[subjectCode];
         const departmentId = courses[courseId];
 
@@ -104,17 +104,24 @@ export const getAttendanceCountsByDepartment=async () =>{
           {
             "Cardtitile": "Total Students",
             "Cardcontent": 0,
-            "Cardsubtext": "In today sessions"
+            "Cardsubtext": "In today sessions",
+            bgColor: "bg-[#86EFAC]", // Background color class
+            textColor: "text-white"
           },
           {
             "Cardtitile": "Total Lecturers",
             "Cardcontent": 0,
-            "Cardsubtext": "In today sessions"
+            "Cardsubtext": "In today sessions", 
+            bgColor: "bg-[#FCD34D]",// Background color class
+             textColor: "text-white"
           },
           {
             "Cardtitile": "Total Admins",
             "Cardcontent": 0,
-            "Cardsubtext": "In today sessions"
+            "Cardsubtext": "In today sessions",
+             bgColor: "bg-[#93C5FD]", // Background color class
+            textColor: "text-white" // Background color class
+
           },
         ];
       
@@ -152,18 +159,116 @@ export const getAttendanceCountsByDepartment=async () =>{
           }
       }; 
 
-      export const fetchAttendanceForAdmin=async()=>{
-        const attendanceQuery=query(collection(db,'attendance'),
-        )
+      // export const fetchAttendanceForAdmin=async()=>{
+      //   const attendanceQuery=query(collection(db,'attendance'),
+      //   )
     
-        const querySnapshot = await getDocs(  attendanceQuery);
-        const attendanceData=[];
-        querySnapshot.forEach((doc)=>{
-          attendanceData.push({id:doc.id,...doc.data()})
-        })
-        console.log("from fuction",attendanceData)
-        return attendanceData
+      //   const querySnapshot = await getDocs(  attendanceQuery);
+      //   const attendanceData=[];
+      //   querySnapshot.forEach((doc)=>{
+      //     attendanceData.push({id:doc.id,...doc.data()})
+      //   })
+      //   console.log("from fuction",attendanceData)
+      //   return attendanceData
     
        
     
+      // }
+
+
+
+
+
+      const fetchCourses = async () => {
+        const coursesCollectionRef = collection(db, 'courses');
+        const q = query(coursesCollectionRef);
+        const querySnapshot = await getDocs(q);
+        const courses = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        return courses;
+    };
+    
+    // Fetch all departments
+    const fetchDepartments = async () => {
+        const departmentsCollectionRef = collection(db, 'departments');
+        const q = query(departmentsCollectionRef);
+        const querySnapshot = await getDocs(q);
+        const departments = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        return departments;
+    };
+    
+    // Fetch all subjects and map to courses and departments
+    const fetchSubjects = async () => {
+        const subjectsCollectionRef = collection(db, 'subjects');
+        const q = query(subjectsCollectionRef);
+        const querySnapshot = await getDocs(q);
+        const subjects = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        return subjects;
+    };
+    
+    // Fetch all attendance records
+    const fetchAttendance = async () => {
+        const attendanceCollectionRef = collection(db, 'attendance');
+        const q = query(attendanceCollectionRef);
+        const querySnapshot = await getDocs(q);
+        const attendanceRecords = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: doc.data().createdAt.toDate() // Convert Firestore timestamp to Date object
+        }));
+        return attendanceRecords;
+    };
+    
+    export const fetchAttendanceForAdmin = async () => {
+      try {
+          // Fetch all relevant data
+          const [courses, departments, subjects, attendance] = await Promise.all([
+              fetchCourses(),
+              fetchDepartments(),
+              fetchSubjects(),
+              fetchAttendance()
+          ]);
+  
+          // Map course IDs to department IDs
+          const courseToDepartmentMap = courses.reduce((map, course) => {
+              map[course.id] = course.departmentId;
+              return map;
+          }, {});
+  
+          // Map department IDs to department names
+          const departmentMap = departments.reduce((map, department) => {
+              map[department.id] = department.name;
+              return map;
+          }, {});
+  
+          // Map subjects to their respective department names via course IDs
+          const subjectMap = subjects.map(subject => {
+              const departmentId = courseToDepartmentMap[subject.courseId];
+              const departmentName = departmentMap[departmentId] || 'Unknown';
+              return {
+                  ...subject,
+                  departmentName
+              };
+          });
+  
+          // Map subject codes to enhanced subject details
+          const subjectCodeMap = subjectMap.reduce((map, subject) => {
+              map[subject.code] = subject;
+              return map;
+          }, {});
+  
+          // Enhance and filter attendance records
+          const enhancedAttendance = attendance.map(record => {
+              const subjectDetails = subjectCodeMap[record.subjectCode];
+              return {
+                  ...record,
+                  department: subjectDetails ? subjectDetails.departmentName : 'Unknown',
+                  course: subjectDetails ? subjectDetails.name : 'Unknown'
+              };
+          });
+  
+          return enhancedAttendance;
+      } catch (error) {
+          console.error("Error fetching attendance data: ", error);
+          return [];
       }
+  };

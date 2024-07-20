@@ -1,7 +1,9 @@
 
 import { setDoc,doc,query,collection,getDocs,where, updateDoc,getDoc} from 'firebase/firestore'
 
-import { db } from '@/utils/firebase/firebaseUtils'
+import { auth, db } from '@/utils/firebase/firebaseUtils'
+
+import { signOut } from 'firebase/auth';
 
 
 //  const sessionId=`${subjectCode}${Date.now()}`
@@ -82,7 +84,7 @@ export const addAttendance=async ({sessionId,  formField, lecturerId })=>{
                 students[doc.data().userID] = false
                       
                     });
-                    console.log(students);
+                    console.log("from add session",courseName, students);
                
 
         }
@@ -90,7 +92,7 @@ export const addAttendance=async ({sessionId,  formField, lecturerId })=>{
         
      
         await setDoc(doc(db, "attendance", sessionId), {
-          courseCode: subjectCode,
+          subjectCode: subjectCode,
           lectureCode: lecturerId ,
           sessionId: sessionId,
           attendance: students,
@@ -156,7 +158,7 @@ export const fetchSessions = async ({lecturerId}) => {
 
   export const fetchAttendance=async()=>{
     const attendanceQuery=query(collection(db,'attendance'),
-    where('lectureCode',"==",'lec003'))
+    where('lectureCode',"==",'lec002'))
 
     const querySnapshot = await getDocs(  attendanceQuery);
     const attendanceData=[];
@@ -217,3 +219,4 @@ export const fetchSessions = async ({lecturerId}) => {
       }
     }
   
+    const signOutUser=()=>signOut(auth)

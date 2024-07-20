@@ -19,11 +19,12 @@ import { LayoutDashboard, CircleUserRound, CalendarCheck2, LibraryBig } from 'lu
 
 
 const navLinks = [
-    { href: '/studentDashboard', text: 'Dashboard', className: '',icon:LayoutDashboard, },
+    { href: '/studentDashboard', text: 'Dashboard', className: '', },
     // { href: '/studentDashboard/qrcode', text: 'QRcode', className: 'text-muted-foreground' },
-    { href: '/studentDashboard/appointment', text: 'Appointment', className: 'text-muted-foreground',icon:CalendarCheck2, },
-    { href: '/studentDashboard/courses', text: 'Courses', className: 'text-muted-foreground',icon:LibraryBig, },
-    { href: '/studentDashboard/profile', text: 'Profile', className: 'text-muted-foreground',icon:CircleUserRound, },
+    { href: '/studentDashboard/appointment', text: 'Appointment', className: 'text-muted-foreground', },
+    { href: '/studentDashboard/courses', text: 'Courses', className: 'text-muted-foreground', },
+    { href: '/studentDashboard/profile', text: 'Profile', className: 'text-muted-foreground',
+     },
   ];
 
   // const iconMap={

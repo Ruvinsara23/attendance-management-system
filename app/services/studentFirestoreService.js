@@ -106,7 +106,7 @@ export const fetchAppointment = async () => {
   export const fetchQRCode = async () => {
     try{
       const qrCodeQuery=query(collection(db,'users'),
-    where('userID',"==",'stuict2201')
+    where('userID',"==",'stueng212121011')
   )
   const querySnapshot=await getDocs(qrCodeQuery);
    let qrCodeUrl = null;
@@ -138,4 +138,12 @@ export const fetchAppointment = async () => {
     });
   
     return attendanceData;
+  };
+
+  export const fetchStdTimetable = async () => {
+    const timetableCollection = collection(db, 'timetables'); 
+    const timetableQuery = query(timetableCollection, where('courseId', '==', 'ICT-103'));
+    const timetableSnapshot = await getDocs(timetableQuery);
+    const timetableList = timetableSnapshot.docs.map(doc => doc.data());
+    return timetableList;
   };
