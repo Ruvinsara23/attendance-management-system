@@ -31,12 +31,14 @@ const page = () => {
   } 
                               
 
-  const handleLogin = async() => {
+  const handleLogin = async(event) => {
+    event.preventDefault()
+
     try {
       const userCredential = await signInWithEmail(email, password);
       const user = userCredential.user;
 
-     console.log("This is from login",user)
+     console.log("This is from login",userCredential)
  
     
       

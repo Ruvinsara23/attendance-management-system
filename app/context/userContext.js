@@ -1,7 +1,8 @@
 import { useContext, createContext,useState,useEffect } from "react";
 import { onAuthStateChangedListner } from "@/utils/firebase/firebaseUtils";
-
-
+import { logout } from "@/utils/firebase/firebaseUtils";
+import { auth } from "@/utils/firebase/firebaseUtils";
+import { useRouter } from "next/navigation";
 const UserContext =createContext({
     currentUser:null,
     setCurrentUser:()=>null
@@ -9,7 +10,9 @@ const UserContext =createContext({
 
 export const UserProvider =({children})=>{
     const [currentUser,setCurrentUser]=useState(null)
+    const router=useRouter()
          const value={currentUser,setCurrentUser}
+         
          
          useEffect(()=>{
             const unsubscribe=  onAuthStateChangedListner((user)=>{
@@ -18,9 +21,19 @@ export const UserProvider =({children})=>{
               
             return unsubscribe
           })
+
+          const signOut = async () => {
+            try {
+              await logout(auth);
+              setCurrentUser(null);
+              router.push('/login'); // Redirect to login page after logout
+            } catch (error) {
+              console.error('Error logging out:', error);
+            }
+          };
     return (
         
-        <UserContext.Provider value={value}>{children}</UserContext.Provider>
+        <UserContext.Provider value={{setCurrentUser, currentUser,signOut}}>{children}</UserContext.Provider>
     )
 }
 

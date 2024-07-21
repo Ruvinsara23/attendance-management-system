@@ -36,7 +36,10 @@ export const db = getFirestore(firebaseApp);
 
 export const auth =getAuth();
 
-export const signInWithEmail=(email, password)=>signInWithEmailAndPassword(auth,email, password)
+export const signInWithEmail=async(email, password)=>
+  { if(!email || !password) return
+
+ return await signInWithEmailAndPassword(auth,email, password)}
 
 
 export const signInWithGooglePopup=()=>signInWithPopup(auth,provider)

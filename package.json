@@ -36,6 +36,7 @@
     "react-qr-reader": "^3.0.0-beta-1",
     "react-qr-scanner": "^1.0.0-alpha.11",
     "react-time-picker": "^7.0.0",
+    "react-toastify": "^10.0.5",
     "recharts": "^2.12.7",
     "shadcn-ui": "^0.8.0",
     "tailwind-merge": "^2.3.0",

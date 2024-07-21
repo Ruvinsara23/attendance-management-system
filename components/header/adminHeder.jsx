@@ -14,7 +14,7 @@ import {
 import { logout } from '@/utils/firebase/firebaseUtils';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu'; 
 import { useUserContext } from '@/app/context/userContext';
-
+import NavDropDown from '../navDropDown/navDropDown';
 const navLinks = [
     { href: '/adminDashboard', text: 'Dashboard', className: '' },
     { href: '/adminDashboard/userManagement', text: 'Users', className: 'text-muted-foreground' },
@@ -25,17 +25,9 @@ const navLinks = [
   
 
 const AdminHeader = () => {
- const {setCurrentUser}=useUserContext()
+ 
 
- const handleLogout = async () => {
-  try {
-    await logout();
-    setCurrentUser(null);
-    alert("Logged out successfully!");
-  } catch (error) {
-   console.log(error.message);
-  }
-};
+ 
 
 
 //  console.log(,"This is user after log out");
@@ -63,24 +55,9 @@ const AdminHeader = () => {
         </nav>
       </SheetContent>
     </Sheet>
-    <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 bg-[#FBF6FEb]">
+    <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 bg-[#FBF6FEb] rounded-lg">
       <SearchBar />
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="icon" className="rounded-full">
-            <CircleUser className="h-5 w-5" />
-            <span className="sr-only">Toggle user menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem  ><Button type='submit' onClick={handleLogout}>Logout</Button></DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+     <NavDropDown />
     </div>
   </header>
   );
