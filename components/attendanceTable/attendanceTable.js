@@ -5,18 +5,18 @@ import { Table,TableBody, TableCell,TableHead, TableHeader,TableRow } from "@/co
   import { Badge } from "../ui/badge";
 
 
-  const formatCreatedAt = (createdAt) => {
-    const date = new Date(createdAt);
-    return date.toLocaleString(); 
-  };
+  // const formatCreatedAt = (createdAt) => {
+  //   const date = new Date(createdAt);
+  //   return date.toLocaleString(); 
+  // };
  
 const AttendanceTable = ({attendanceData,studentIdFilter}) => {
   console.log("from attendance table admin datad=aset ,",attendanceData)
 
     return (
-      <div className="custom-scrollbar overflow-x-auto overflow-y-auto max-h-96"> 
+      <div className="custom-scrollbar overflow-x-auto overflow-y-auto h-auto max-h-[400px]"> 
       <Table >
-        <TableHeader className='font-semibold bg-gradient-to-r from-pink-50 via-fuchsia-100 to-fuchsia-50 '>
+        <TableHeader className='font-semibold bg-[] '>
           <TableRow className='text-[#1F2937] m-5'>
             <TableHead className='text-[#1F2937]'>Student Name</TableHead>
             <TableHead  className='text-[#1F2937]'>Subject Code</TableHead>
@@ -27,9 +27,9 @@ const AttendanceTable = ({attendanceData,studentIdFilter}) => {
         <TableBody className='text-[#6B7280]' >
    
         {attendanceData.map((attendance) => (
-          Object.entries(attendance.attendance).map(([studentId, status]) => (
+          attendance.attendance &&  Object.entries(attendance.attendance).map(([studentId, status]) => (
             (!studentIdFilter || studentId === studentIdFilter) &&   (
-              <TableRow  key={`${attendance.id}-${studentId}`}  className="bg-gradient-to-r from-pink-50 via-fuchsia-100 to-fuchsia-50 border-[#EBCFFC]">
+              <TableRow  key={`${attendance.id}-${studentId}`}  className="bg-[]">
                 <TableCell>
                   <div className="font-medium">{studentId}</div>
                 </TableCell>
@@ -39,7 +39,7 @@ const AttendanceTable = ({attendanceData,studentIdFilter}) => {
                     {status ? 'Present' : 'Absent'}
                   </Badge>
                 </TableCell>
-                <TableCell>{formatCreatedAt(attendance.createdAt)}</TableCell>
+                <TableCell>{new Date(attendance.createdAt).toLocaleString()}</TableCell>
               </TableRow>
             )
           ))

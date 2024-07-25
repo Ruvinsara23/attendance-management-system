@@ -92,9 +92,13 @@ const getMaxUserID = async (departmentId, academicYear) => {
   let maxID = 0;
   querySnapshot.forEach(doc => {
     const userId = doc.data().userID;
-    const userNumber = parseInt(userId.match(/\d+$/)[0], 10);
-    if (userNumber > maxID) {
-      maxID = userNumber;
+    const regex = new RegExp(`^stu${departmentId}${academicYear.slice(-2)}(\\d{3})$`);
+    const match = userId.match(regex);
+    if (match) {
+      const userNumber = parseInt(match[1], 10);
+      if (userNumber > maxID) {
+        maxID = userNumber;
+      }
     }
   });
   return maxID;
@@ -102,7 +106,7 @@ const getMaxUserID = async (departmentId, academicYear) => {
 
 const createUserID = async (department, academicYear) => {
   const maxUserID = await getMaxUserID(department, academicYear);
-  const newUserIDNumber = (maxUserID + 1).toString().padStart(2, '0');
+  const newUserIDNumber = (maxUserID + 1).toString().padStart(3, '0');
   return `stu${department}${academicYear.slice(-2)}${newUserIDNumber}`;
 };
 
@@ -120,10 +124,11 @@ const createUserID = async (department, academicYear) => {
 const generateTempPassword=()=>Math.random().toString(36).slice (-8)
 
 const createUser =async ()=> {
-const tempPassword="abcd1234"
+const tempPassword= 'abcd1234'
 const newUserID = await createUserID(department, academicYear);
 const qrCodeData =`${newUserID}` ; 
 const qrCodeUrl = await QRCode.toDataURL(qrCodeData);
+console.log(newUserID ,"new user id")
 
 try {
     const userCredential=await
@@ -171,15 +176,15 @@ const handleSubmit = async (event) => {
 
 
     return (
-      <Card className="w-full max-w-2xl border-black">
+      <Card className="w-full max-w-2xl border-black p-10">
         <CardHeader>
           <CardTitle>Create User</CardTitle>
           <CardDescription>Add a new user.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-6">
-        <div className="grid grid-cols-2 gap-6">
-        <div className="space-y-2">
+        <CardContent className="space-y-9">
+        <div className="grid grid-cols-2 gap-20">
+        <div className="space-y-9">
               <Label htmlFor="role">User Role</Label>
               <Input id="id" placeholder="Enter user Role" onChange={handleChange} name='userRole' value={userRole} />    
             </div>

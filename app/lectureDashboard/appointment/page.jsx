@@ -36,7 +36,7 @@ const  lecAppoinment = () => {
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
     <h1 className="text-3xl font-bold mb-6">Appointment Management</h1>
-    <section className="mb-8">
+    <section className="mb-8 ">
       <h2 className="text-2xl font-bold mb-4">Upcoming Appointments</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {appointments.filter(appointment=>appointment.status==='pending'||appointment.status==='confirm').map((appointment) => (
@@ -55,8 +55,8 @@ const  lecAppoinment = () => {
     </section>
     <section>
       <h2 className="text-2xl font-bold mb-4">Create New Appointment</h2>
-      <Card>
-        <CardContent className="p-4">
+      <Card className="border-[#4D11A7]">
+        <CardContent className="p-4 ">
           <form>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>

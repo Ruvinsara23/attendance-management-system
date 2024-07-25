@@ -129,6 +129,8 @@
 
   
 
+  
+
   @layer base {
     * {
       @apply border-border;
@@ -138,4 +140,93 @@
     }
 
 
+  }
+
+ 
+  .custom-calendar-container {
+    @apply max-w-full max-h-screen overflow-auto p-4;
+  }
+  
+  /* Calendar */
+  .custom-calendar {
+    @apply w-full h-full;
+  }
+  
+  /* Toolbar */
+  .custom-calendar .rbc-toolbar {
+    @apply flex justify-between items-center mb-4 p-2 bg-white shadow-md rounded-lg border ;
+  }
+  
+  .custom-calendar .rbc-toolbar button {
+    @apply bg-[#ebdef4] text-[#914ADB] font-semibold rounded-lg px-4 py-2 mx-1 transition-colors duration-300;
+  }
+  
+  .custom-calendar .rbc-toolbar button:hover {
+    @apply bg-[#F3F4F6];
+  }
+  
+  /* Event Styling */
+  .custom-calendar .rbc-event {
+    @apply text-white font-normal rounded-sm p-2 shadow-lg transition-all border-none duration-300;
+  }
+  
+  /* Session Event Styling */
+  /* .custom-calendar .rbc-event.session {
+    @apply bg-[#FEF3C7];
+  }
+  
+  .custom-calendar .rbc-event.session:hover {
+    @apply bg-[#FEF3C7]; /* Slightly darker shade for hover */
+
+  
+  /* Appointment Event Styling */
+  /* .custom-calendar .rbc-event.appointment {
+    @apply bg-[#FDE68A];
+  }
+  
+  .custom-calendar .rbc-event.appointment:hover {
+    @apply bg-[#FECACA]; /* Slightly darker shade for hover */
+  
+  
+  /* Event Info */
+  .custom-calendar .rbc-event-info {
+    @apply absolute bg-white text-gray-800 border rounded-lg shadow-lg p-2 text-sm hidden;
+    /* Adjust position to appear above the event */
+    top: 100%;
+    left: 0;
+    z-index: 10;
+  }
+  
+  .custom-calendar .rbc-event:hover .rbc-event-info {
+    @apply block;
+  }
+  
+  /* Month View */
+  .custom-calendar .rbc-month-view {
+    @apply bg-white rounded-lg shadow-md p-4;
+  }
+  
+  /* Header */
+  .custom-calendar .rbc-header {
+    @apply bg-gray-100 text-gray-700 font-semibold p-2 rounded-lg;
+  }
+  
+  /* Date Cell */
+  .custom-calendar .rbc-date-cell {
+    @apply bg-gray-50 rounded-lg p-2 hover:bg-gray-100 transition-colors duration-200;
+  }
+  
+  /* Today */
+  .custom-calendar .rbc-today {
+    @apply bg-[#D4A1F9] text-white font-bold;
+  }
+  
+  /* Selected */
+  .custom-calendar .rbc-selected {
+    @apply bg-[#BFDBFE] text-gray-800;
+  }
+  
+  /* Show More */
+  .custom-calendar .rbc-show-more {
+    @apply text-[#D4A1F9] font-semibold;
   }

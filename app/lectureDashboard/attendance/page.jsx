@@ -10,6 +10,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 import { fetchAttendance } from '@/app/services/lectureFirestoreService'
 import AttendanceTable from '@/components/attendanceTable/attendanceTable'
+import { Card } from '@/components/ui/card'
 
 
 
@@ -19,9 +20,9 @@ const page = () => {
     const [attendanceData,setAttendanceData  ]=useState([])
   const [filteredData, setFilteredData] = useState([]);
   const [dateRange, setDateRange] = useState([null, null]);
-  const [subject, setSubject] = useState('all');
-  const [department, setDepartment] = useState('all');
-  const [status, setStatus] = useState('all');
+  const [subject, setSubject] = useState('All');
+  const [department, setDepartment] = useState('All');
+  const [status, setStatus] = useState('All');
 
   useEffect(() => {
     const fetchAndSetAttendance = async () => {
@@ -48,15 +49,15 @@ const page = () => {
       });
     }
 
-    if (subject && subject !== 'all') {
-      data = data.filter(item => item.courseCode === subject);
+    if (subject && subject !== 'All') {
+      data = data.filter(item => item.subjectCode === subject);
     }
 
-    if (department && department !== 'all') {
+    if (department && department !== 'All') {
       data = data.filter(item => item.department === department);
     }
 
-    if (status && status !== 'all') {
+    if (status && status !== 'All') {
         data = data.map(item => {
             const filteredAttendance = Object.fromEntries(
                 Object.entries(item.attendance).filter(([studentId, attended]) => {
@@ -80,18 +81,20 @@ const page = () => {
     // Implement download report logic
   };
 
-  const uniqueSubjects = ['all', ...new Set(attendanceData.map(item => item.courseCode))];
-  const uniqueDepartments = ['all', ...new Set(attendanceData.map(item => item.department))];
+  const uniqueSubjects = ['All', ...new Set(attendanceData.map(item => item.subjectCode))];
+  const uniqueDepartments = ['All', ...new Set(attendanceData.map(item => item.department))];
        
          
 
 
   return (
-    <div className="container mx-auto px-4 py-8 md:px-6 md:py-12">
+
+    <div className="container mx-auto px-4 py-8 md:px-6 md:py-12 ">
+    <Card className='border-[#6418C3] p-7'>
       <div className="space-y-4 mb-8">
         <h1 className="text-3xl font-bold">Attendance Report</h1>
         <p className="text-muted-foreground">
-          Generate a detailed report of employee attendance based on your selected filters.
+          Generate a detailed report of students attendance based on your selected filters.
         </p>
       </div>
       <div className="bg-card p-6 rounded-lg shadow-sm mb-8">
@@ -152,16 +155,17 @@ const page = () => {
           </div>
         </div>
       </div>
-      <div className="bg-card p-6 rounded-lg shadow-sm">
+      <div className="bg-card p-6 rounded-lg shadow-sm ">
         <h2 className="text-xl font-semibold mb-4">Attendance Details</h2>
         <AttendanceTable attendanceData={filteredData} />
       </div>
       <div className="flex justify-end mt-6">
-        <Button variant="outline" onClick={downloadReport}>
+        <Button type="submit" onClick={downloadReport}>
           <DownloadIcon className="mr-2 h-4 w-4" />
           Download Report
         </Button>
       </div>
+      </Card>
     </div>
 );
 

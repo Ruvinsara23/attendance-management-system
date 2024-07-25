@@ -15,7 +15,8 @@ import {
 } from '@/components/ui/dialog'
 
 
-const DisplayCard = ({ session ,showActions = true,onStatusUpdate }) => {
+const 
+DisplayCard = ({ session ,showActions = true,onStatusUpdate }) => {
   const [showQRScanner, setShowQRScanner] = useState(false);
 
         
@@ -36,7 +37,7 @@ const handlFinish=async()=>{
 
   return (
     <div>
-    <Card className='mb-4  bg-[#FBF6FE] rounded-[16px] shadow-xl border-[#cf70ec] p-4 pb-0'>
+    <Card className='mb-4  rounded-[16px] shadow-xl border-[#cf70ec] p-4 pb-0'>
     <CardContent className="p-4">
       <div className="flex items-center justify-between mb-2">
         <div className="font-semibold">{session.subjectName}</div>

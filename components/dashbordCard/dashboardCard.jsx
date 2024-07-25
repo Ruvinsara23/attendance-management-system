@@ -19,7 +19,7 @@ import { UserRoundPlus,UserRoundMinus,
  }
 
 
-const DashboardCard = ({cardData}) => {
+const DashboardCard = ({cardData=[]}) => {
   
  
   return (

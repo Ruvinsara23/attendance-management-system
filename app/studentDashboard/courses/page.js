@@ -91,7 +91,7 @@ useEffect(()=>{
 
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
           <Card
-            className="xl:col-span-2" x-chunk="dashboard-01-chunk-4"
+            className="xl:col-span-2 border-[#4D11A7]" x-chunk="dashboard-01-chunk-4"
           >
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-2">
@@ -105,7 +105,7 @@ useEffect(()=>{
             <TimeTable  timeTable={timeTable}/>
             </CardContent>
           </Card>
-          <Card x-chunk="dashboard-01-chunk-5">
+          <Card x-chunk="dashboard-01-chunk-5" className='border-[#4D11A7]'>
             <CardHeader>
               <CardTitle>Lecture Pannel</CardTitle>
             </CardHeader>
@@ -114,7 +114,7 @@ useEffect(()=>{
           <div key={index} className="flex items-center gap-4">
             <Avatar className="hidden h-9 w-9 sm:flex">
               <AvatarImage src={`/avatars/${index + 1}.png`} alt="Avatar" />
-              <AvatarFallback>{item.lectureID}</AvatarFallback>
+              <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="grid gap-1">
               <p className="text-sm font-medium leading-none">{item.lectureID}</p>

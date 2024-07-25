@@ -4,6 +4,8 @@ import {Package2,CircleUser,} from "lucide-react"
 import { logout } from '@/utils/firebase/firebaseUtils';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu'; 
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage,AvatarFallback } from '../ui/avatar';
+
 
 
 const NavDropDown = () => {
@@ -21,8 +23,11 @@ const NavDropDown = () => {
   return (
     <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="icon" className="rounded-full">
-            <CircleUser className="h-5 w-5" />
+          <Button variant="" size="icon" className="rounded-full">
+          <Avatar className='' >
+          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
             <span className="sr-only">Toggle user menu</span>
           </Button>
         </DropdownMenuTrigger>

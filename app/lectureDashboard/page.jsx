@@ -10,7 +10,7 @@ import {Card,CardContent,CardDescription,CardHeader,CardTitle,
   } from "@/components/ui/card"
   import {DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuLabel,DropdownMenuSeparator,DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
-
+import CalendarIn from '@/components/calender/calender'
   import AttendanceTable from '@/components/attendanceTable/attendanceTable'
 import DashboardCard from '@/components/dashbordCard/dashboardCard'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
@@ -197,60 +197,12 @@ const updateCardData = async () => {
           </CardContent>
         </Card>
         <div className="grid gap-6">
-        <Card className="w-full max-w-[530px] rounded-[16px] border-[#cf70ec] ">
+        <Card className="w-full max-w-[530px] rounded-[16px] ">
           <CardHeader>
-            <CardTitle>Upcoming Appointment</CardTitle>
+            <CardTitle>Upcoming Appointment And Sessions</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
-            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-              <Avatar className="border">
-                <AvatarImage src="/placeholder-user.jpg" />
-                <AvatarFallback>JS</AvatarFallback>
-              </Avatar>
-              <div className="grid gap-1">
-                <div className="font-medium">John Doe</div>
-                <div className="text-muted-foreground">ICT-211</div>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="rounded-full bg-green-500/20 px-3 py-1 text-xs font-medium text-green-500">Confirmed</div>
-              </div>
-            </div>
-            <div className="grid grid-cols-[auto_1fr] items-center gap-4">
-              <CalendarIcon className="h-6 w-6 text-muted-foreground" />
-              <div>
-                <div className="font-medium">June 29, 2024</div>
-                <div className="text-muted-foreground">3:00 PM - 4:00 PM</div>
-              </div>
-            </div>
-            <Button variant="secondary" className="justify-self-end ">
-              Cancel Appointment
-            </Button>
-          </CardContent>
-        </Card>
-        <Card className="w-full max-w-[530px]">
-          <CardHeader>
-            <CardTitle>New Session</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-4">
-            <div className="grid grid-cols-[auto_1fr] items-center gap-4">
-              <CalendarIcon className="h-6 w-6 text-muted-foreground" />
-              <div>
-                <div className="font-medium">June 30, 2024</div>
-                <div className="text-muted-foreground">3:00 PM - 4:00 PM</div>
-              </div>
-            </div>
-            <Select>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Subject" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="math">ICT-211</SelectItem>
-                <SelectItem value="english">ICT-231</SelectItem>
-                <SelectItem value="science">ICT-291</SelectItem>
-                <SelectItem value="history">ICT-311</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button className="w-full">Schedule Session</Button>
+            <CalendarIn />
           </CardContent>
         </Card>
       </div>

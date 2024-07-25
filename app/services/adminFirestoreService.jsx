@@ -1,6 +1,7 @@
 import {setDoc,doc,query,collection,getDocs,where, updateDoc,getDoc } from "firebase/firestore"
 import { db } from '@/utils/firebase/firebaseUtils'
 
+
 export const fetchDepartmentsAndCourses = async () => {
     const departmentsCollection = collection(db, 'departments');
     const coursesCollection = collection(db, 'courses');
@@ -99,7 +100,7 @@ export const getAttendanceCountsByDepartment=async () =>{
     }
     
     
-    export const getUserCounts = async () => {
+export const getUserCounts = async () => {
         const cardData = [
           {
             "Cardtitile": "Total Students",
@@ -150,9 +151,20 @@ export const getAttendanceCountsByDepartment=async () =>{
             cardData[0].Cardcontent = studentCount;
             cardData[1].Cardcontent = lecturerCount;
             cardData[2].Cardcontent = adminCount;
+
         
             console.log('Updated cardData:', cardData);
-            return cardData; 
+
+            const chartData = [
+              { browser: "students", visitors: studentCount, fill: "#B270EC" },
+              { browser: "lecturers", visitors: lecturerCount, fill: "#D4A1F9" },
+              { browser: "admins", visitors: adminCount, fill: "#EBCFFC" },
+            ];
+        
+            console.log('Updated chartData:', chartData);
+        
+
+            return { cardData, chartData };
           } catch (error) {
             console.error('Error getting user counts:', error);
             throw error; 
@@ -179,7 +191,7 @@ export const getAttendanceCountsByDepartment=async () =>{
 
 
 
-      const fetchCourses = async () => {
+const fetchCourses = async () => {
         const coursesCollectionRef = collection(db, 'courses');
         const q = query(coursesCollectionRef);
         const querySnapshot = await getDocs(q);
@@ -188,7 +200,7 @@ export const getAttendanceCountsByDepartment=async () =>{
     };
     
     // Fetch all departments
-    const fetchDepartments = async () => {
+const fetchDepartments = async () => {
         const departmentsCollectionRef = collection(db, 'departments');
         const q = query(departmentsCollectionRef);
         const querySnapshot = await getDocs(q);
@@ -197,7 +209,7 @@ export const getAttendanceCountsByDepartment=async () =>{
     };
     
     // Fetch all subjects and map to courses and departments
-    const fetchSubjects = async () => {
+const fetchSubjects = async () => {
         const subjectsCollectionRef = collection(db, 'subjects');
         const q = query(subjectsCollectionRef);
         const querySnapshot = await getDocs(q);
@@ -213,7 +225,7 @@ export const getAttendanceCountsByDepartment=async () =>{
         const attendanceRecords = querySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
-            createdAt: doc.data().createdAt.toDate() // Convert Firestore timestamp to Date object
+            // createdAt: doc.data().createdAt.toDate()// Convert Firestore timestamp to Date object
         }));
         return attendanceRecords;
     };
@@ -228,29 +240,33 @@ export const getAttendanceCountsByDepartment=async () =>{
               fetchAttendance()
           ]);
   
-          // Map course IDs to department IDs
+          // Create a map from course IDs to department IDs
           const courseToDepartmentMap = courses.reduce((map, course) => {
               map[course.id] = course.departmentId;
               return map;
           }, {});
   
-          // Map department IDs to department names
+          // Create a map from department IDs to department names
           const departmentMap = departments.reduce((map, department) => {
               map[department.id] = department.name;
               return map;
           }, {});
   
-          // Map subjects to their respective department names via course IDs
+          // Map subjects to include department names and course names
           const subjectMap = subjects.map(subject => {
-              const departmentId = courseToDepartmentMap[subject.courseId];
+              const courseId = subject.courseId;
+              const departmentId = courseToDepartmentMap[courseId];
               const departmentName = departmentMap[departmentId] || 'Unknown';
               return {
                   ...subject,
-                  departmentName
+                  departmentName,
+                  courseName: courses.find(course => course.id === courseId)?.name || 'Unknown'
               };
           });
+
+
   
-          // Map subject codes to enhanced subject details
+          // Create a map from subject codes to subject details
           const subjectCodeMap = subjectMap.reduce((map, subject) => {
               map[subject.code] = subject;
               return map;
@@ -259,10 +275,18 @@ export const getAttendanceCountsByDepartment=async () =>{
           // Enhance and filter attendance records
           const enhancedAttendance = attendance.map(record => {
               const subjectDetails = subjectCodeMap[record.subjectCode];
+              let createdAt = record.createdAt;
+              if (createdAt && typeof createdAt.toDate === "function") {
+                createdAt = createdAt.toDate();
+              }
+
               return {
                   ...record,
+          
                   department: subjectDetails ? subjectDetails.departmentName : 'Unknown',
-                  course: subjectDetails ? subjectDetails.name : 'Unknown'
+                  course: subjectDetails ? subjectDetails.courseName : 'Unknown',
+                  subject: subjectDetails ? subjectDetails.name : 'Unknown',
+                  createdAt
               };
           });
   
@@ -272,3 +296,33 @@ export const getAttendanceCountsByDepartment=async () =>{
           return [];
       }
   };
+
+  export const fetchUserDetails= async()=>{
+
+    const usersCollectionRef = collection(db, 'users');
+    const usersQuery = query(usersCollectionRef);
+    const usersQuerySnapshot = await getDocs(usersQuery);
+    const usersData = usersQuerySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  
+    // Fetch courses data
+    const departmentsCollectionRef = collection(db, 'departments');
+    const departmentsQuery = query(departmentsCollectionRef);
+    const departmentsQuerySnapshot = await getDocs(departmentsQuery);
+    const departmentsData = departmentsQuerySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+  
+    return { usersData, departmentsData };
+
+  };
+
+
+ 
+export const updateUserDetails = async (userId, userDetails) => {
+  const userDocRef = doc(db, 'users', userId); // adjust the collection name if necessary
+
+  try {
+    await updateDoc(userDocRef, userDetails);
+  } catch (error) {
+    console.error('Error updating document: ', error);
+    throw error;
+  }
+};

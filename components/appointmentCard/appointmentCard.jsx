@@ -39,7 +39,7 @@ const AppointmentCard = ( {
     console.log  (appointment)
     
   return (
-    <Card className="mb-4  bg-[#FBF6FE] rounded-[16px] shadow-xl border-[#cf70ec] p-4 pb-0">
+    <Card className="mb-4   rounded-[16px] shadow-xl border-[#cf70ec] p-4 pb-0">
     <CardContent className="p-4">
       <div className="flex items-center justify-between mb-2">
         <div className="font-semibold flex items-center "> 

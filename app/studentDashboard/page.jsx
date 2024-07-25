@@ -203,9 +203,9 @@ const studentDashboard = () => {
   
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
         <Card
-          className="xl:col-span-2 border shadow-xl" x-chunk="dashboard-01-chunk-4"
+          className="xl:col-span-2 border-[#6418C3] shadow-xl" x-chunk="dashboard-01-chunk-4" 
         >
-          <CardHeader className="flex flex-row items-center bg-gradient-to-r from-pink-50 via-fuchsia-100 to-fuchsia-50">
+          <CardHeader className="flex flex-row items-center ">
             <div className="grid gap-2">
               <CardTitle>Attendance</CardTitle>
               <CardDescription>
@@ -223,7 +223,7 @@ const studentDashboard = () => {
           <AttendanceTable attendanceData={attendanceData} studentIdFilter="stuict21001"  />
           </CardContent>
         </Card>
-        <Card className="border-blue-500 p-14 pt-6 shadow-xl" x-chunk="dashboard-01-chunk-5" >
+        <Card className="border-[#6418C3] p-14 pt-6 shadow-xl" x-chunk="dashboard-01-chunk-5" >
           <CardHeader>
             <CardTitle>QR Code</CardTitle>
             <CardDescription>

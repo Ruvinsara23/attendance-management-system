@@ -94,7 +94,9 @@ export const fetchAppointment = async () => {
     const querySnapshot = await getDocs( attendanceQuery);
     const attendanceData=[];
     querySnapshot.forEach((doc)=>{
-      attendanceData.push({id:doc.id,...doc.data()})
+      attendanceData.push({id:doc.id,...doc.data(),
+        createdAt: doc.data().createdAt.toDate() 
+      })
     })
     console.log("from fuction  fff",attendanceData)
     return attendanceData
@@ -106,7 +108,7 @@ export const fetchAppointment = async () => {
   export const fetchQRCode = async () => {
     try{
       const qrCodeQuery=query(collection(db,'users'),
-    where('userID',"==",'stueng212121011')
+    where('userID',"==",'stueng21002')
   )
   const querySnapshot=await getDocs(qrCodeQuery);
    let qrCodeUrl = null;

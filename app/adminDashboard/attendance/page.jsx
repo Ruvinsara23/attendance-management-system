@@ -19,13 +19,13 @@ const page = () => {
     const [attendanceData,setAttendanceData  ]=useState([])
   const [filteredData, setFilteredData] = useState([]);
   const [dateRange, setDateRange] = useState([null, null]);
-  const [subject, setSubject] = useState('all');
-  const [department, setDepartment] = useState('all');
-  const [status, setStatus] = useState('all');
+  const [subject, setSubject] = useState('All');
+  const [department, setDepartment] = useState('All');
+  const [status, setStatus] = useState('All');
 
   useEffect(() => {
     const fetchAndSetAttendance = async () => {
-      const data = await fetchAttendanceForAdmin();
+      const data = await fetchAttendanceForAdmin ();
       setAttendanceData(data);
       console.log(data, "attendance");
     };
@@ -48,16 +48,19 @@ const page = () => {
       });
     }
   
-    if (subject && subject !== 'all') {
+    if (subject && subject !== 'All') {
       data = data.filter(item => item.subjectCode === subject);
     }
   
-    if (department && department !== 'all') {
+    if (department && department !== 'All') {
       data = data.filter(item => item.department === department);
     }
   
-    if (status && status !== 'all') {
-      data = data.map(item => {
+    if (status && status !== 'All') {
+      data = data.filter(item => {
+        const hasStatus = Object.values(item.attendance).includes(status === 'present');
+        return hasStatus ? item : null;
+      }).map(item => {
         const filteredAttendance = Object.fromEntries(
           Object.entries(item.attendance).filter(([studentId, attended]) => {
             if (status === 'present') {
@@ -82,10 +85,8 @@ const page = () => {
     // Implement download report logic
   };
 
-  const uniqueSubjects = ['all', ...new Set(attendanceData.map(item => item.subjectCode))];
-  const uniqueDepartments = ['all', ...new Set(attendanceData.map(item => item.department))];
-       
-         
+  const uniqueSubjects = ['All', ...new Set(attendanceData.map(item => item.subjectCode))];
+const uniqueDepartments = ['All', ...new Set(attendanceData.map(item => item.department))];
 
 
   return (
@@ -156,7 +157,7 @@ const page = () => {
       </div>
       <div className="bg-card p-6 rounded-lg shadow-sm">
         <h2 className="text-xl font-semibold mb-4">Attendance Details</h2>
-        <AttendanceTable attendanceData={filteredData} />
+ <AttendanceTable attendanceData={filteredData} /> 
       </div>
       <div className="flex justify-end mt-6">
         <Button variant="outline" onClick={downloadReport}>

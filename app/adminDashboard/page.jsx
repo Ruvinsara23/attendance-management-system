@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button"
 import {Card,CardContent,CardDescription,CardHeader,CardTitle,
   } from "@/components/ui/card"
 import { AdminBarChart } from '@/components/adminchart/adminBarchart'
-
+import UserChart from '@/components/userChart/userChart'
 import { getUserCounts } from '../services/adminFirestoreService'
 
 
@@ -53,40 +53,22 @@ import { getUserCounts } from '../services/adminFirestoreService'
 // ];
 
 const page = () => {
-  const [cardData, setCardData] = useState([
-    {
-      "Cardtitile": "Total Students",
-      "Cardcontent": 0,
-      "Cardsubtext": "In today sessions",
-      bgColor: "bg-[#86EFAC]"
-    },
-    {
-      "Cardtitile": "Total Lecturers",
-      "Cardcontent": 0,
-      "Cardsubtext": "In today sessions",
-      bgColor: "bg-[#FCD34D]"
-    },
-    {
-      "Cardtitile": "Total Admins",
-      "Cardcontent": 0,
-      "Cardsubtext": "In today sessions",
-      bgColor: "bg-[#93C5FD]"
-    },
-  ]);
+  const [cardData, setCardData] = useState([]);
+  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const updatedCardData = await getUserCounts();
-        setCardData(updatedCardData);
+        const { cardData, chartData } = await getUserCounts();
+        setCardData(cardData);
+        setChartData(chartData);
       } catch (error) {
-        console.error('Error fetching user counts:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
   }, [])
-
   return (
     <div className="flex min-h-screen w-full flex-col">
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
@@ -98,25 +80,7 @@ const page = () => {
          <AdminBarChart />
           
         <div className="grid gap-6">
-        <Card className="w-full max-w-[530px]">
-          <CardHeader>
-            <CardTitle>Upcoming Appointment</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-4">
-            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-             
-            </div>
-          
-          </CardContent>
-        </Card>
-        <Card className="w-full max-w-[530px]">
-          <CardHeader>
-            <CardTitle>New Session</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-4">
-     
-          </CardContent>
-        </Card>
+        <UserChart />
         <AddData />
       </div>
       </div>

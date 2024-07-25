@@ -1,9 +1,10 @@
 import React from 'react'
 import { updateStudentAttendance } from '@/app/services/lectureFirestoreService'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useRef } from 'react';
 const QrScanner = dynamic(() => import('react-qr-scanner').then(mod => mod.default), { ssr: false });
 
 
@@ -11,16 +12,24 @@ const QrScanner = dynamic(() => import('react-qr-scanner').then(mod => mod.defau
 
 
 
-const QRCodeReader = ({ attendanceId }) => {
+const QRCodeReader = ({ attendanceId, debounceDelay = 2000 }) => {
 const [result, setResult] = useState('');
-const [isScanning, setIsScanning] = useState(true);
-
+const lastScannedTimeRef = useRef(0);
+ 
 
 const handleScan=async(data)=>{
-    if (data) {
-        setResult(data.text);
-        const studentId = data.text;
-        setIsScanning(false);
+  if (data && data.text !== result) {
+    const currentTime = new Date().getTime();
+    if (currentTime - lastScannedTimeRef.current < debounceDelay) {
+      // Ignore scan if it occurs within the debounce delay
+      return;
+    }
+
+    lastScannedTimeRef.current = currentTime;
+    setResult(data.text);
+
+    const studentId = data.text;
+
         try {
           const audio = new Audio('/store-scanner-beep-90395.mp3');
           audio.play().catch(error => console.error('Error playing audio:', error));
@@ -51,20 +60,19 @@ const handleScan=async(data)=>{
         });
 
         
-          } finally {
-            
-            setTimeout(() => {
-              setIsScanning(true);
-            }, 5000); 
-          }
+          } 
 
-
-  
+          // finally {
+          //   // Set timeout only after attendance update is confirmed
+          //   timeoutId = setTimeout(() => setIsScanning(true), restartTimeout);
+          // }
  }
  
 
 
 }
+
+useEffect(() => {return() => clearTimeout(lastScannedTimeRef.current)}, [])
 
 const handleError = (err) => {
     console.error(err);
@@ -81,7 +89,7 @@ const handleError = (err) => {
     <div>
     <div>
     <QrScanner
-      delay={500}
+      delay={5000}
       onError={handleError}
       onScan={handleScan}
       style={previewStyle}

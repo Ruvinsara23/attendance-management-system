@@ -12,7 +12,7 @@ const TimeTable = ({ timeTable}) => {
 
 
     return (
-      <Table className='font-semibold bg-gradient-to-r from-pink-50 via-fuchsia-100 to-fuchsia-50 ' >
+      <Table className='font-semibold bg-white ' >
         <TableHeader>
           <TableRow>
             <TableHead>Course Title</TableHead>

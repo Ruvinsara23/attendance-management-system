@@ -111,27 +111,25 @@ const page = () => {
               </div>
               <Input id="password" type="password" required  onChange={handleChange} name='password' value={password}/>
             </div>
-            <Button type="submit" className="w-full" onClick={handleLogin}>
+            <Button type="submit" className="w-full bg-[#B270EC]" onClick={handleLogin}>
               Login
             </Button>
-            <Button variant="outline" className="w-full" >
-              Login with Google
-            </Button>
+          
           </div>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
             <Link href="#" className="underline">
-              Sign up
+              Contact Admin
             </Link>
           </div>
         </div>
       </div>
       <div className="hidden bg-muted lg:block">
         <Image
-          src="/placeholder.svg"
+          src="/login.svg"
           alt="Image"
           width="1920"
-          height="1080"
+          height="1000"
           className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>

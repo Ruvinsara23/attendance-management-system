@@ -54,7 +54,7 @@ const StudentHeader = () => {
 
 //  console.log(,"This is user after log out");
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-4 border-b  px-4 md:px-6 bg-[#f4e9fa]">
+    <header className="sticky top-0 flex h-16 items-center gap-4 border-b  px-4 md:px-6 bg-[#FBF6FE]">
     <NavBar data={navLinks} />
     <Sheet>
       <SheetTrigger asChild>

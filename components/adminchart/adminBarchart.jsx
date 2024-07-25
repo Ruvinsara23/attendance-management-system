@@ -89,8 +89,8 @@ export function AdminBarChart() {
             <CartesianGrid vertical={false} />
             <XAxis dataKey="department" tickLine={false} tickMargin={10} axisLine={false} />
             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dashed" />} />
-            <Bar dataKey="present" fill="#914ADB" radius={4} />
-            <Bar dataKey="absent" fill="#6418C3" radius={4} />
+            <Bar dataKey="present" fill="#B270EC" radius={4} />
+            <Bar dataKey="absent" fill="#D4A1F9" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>

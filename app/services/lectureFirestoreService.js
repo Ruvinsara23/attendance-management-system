@@ -36,76 +36,137 @@ import { signOut } from 'firebase/auth';
 
  }
 
-export const addAttendance=async ({sessionId,  formField, lecturerId })=>{
-    const { subjectCode, 
-   } = formField;
+ export const addAttendance = async ({ sessionId, formField, lecturerId }) => {
+  const { subjectCode } = formField;
+
+  const subjectQuery = query(
+    collection(db, 'subjects'),
+    where('code', '==', subjectCode)
+  );
+
+  try {
+    const subjectSnapshot = await getDocs(subjectQuery);
+    let students = {};
+
+    if (subjectSnapshot.empty) {
+      console.log("No matching documents.");
+    } else {
+      let courseId;
+      subjectSnapshot.forEach((doc) => {
+        courseId = doc.data().courseId;
+      });
+      console.log("Course Id", courseId);
+
+      const courseQuery = query(
+        collection(db, 'courses'),
+        where('id', '==', courseId)
+      );
+
+      const courseSnapshot = await getDocs(courseQuery);
+      let courseName;
+      courseSnapshot.forEach((doc) => {
+        courseName = doc.data().name;
+      });
+      console.log("Course name", courseName);
+
+      const studentQuery = query(
+        collection(db, "users"),
+        where("userRole", "in", ["Student", "student"]),
+        where("course", "==", courseName)
+      );
+      const studentSnapshot = await getDocs(studentQuery);
+
+      studentSnapshot.forEach((doc) => {
+        students[doc.data().userID] = false;
+      });
+
+      console.log("from add session", courseName, students);
+
+      await setDoc(doc(db, "attendance", sessionId), {
+        subjectCode: subjectCode,
+        lectureCode: lecturerId,
+        sessionId: sessionId,
+        attendance: students,
+        createdAt: new Date()
+      });
+
+      console.log("Attendance document created in Firestore");
+    }
+  } catch (error) {
+    console.log("Error creating attendance document", error);
+  }
+}
+
+// export const addAttendance=async ({sessionId,  formField, lecturerId })=>{
+//     const { subjectCode, 
+//    } = formField;
 
     
-    const subjectQuery = query(
-        collection(db, 'subjects'),
-        where('code', '==', subjectCode)
-      );
+//     const subjectQuery = query(
+//         collection(db, 'subjects'),
+//         where('code', '==', subjectCode)
+//       );
       
-      try {
-        const subjectSnapshot = await getDocs(subjectQuery);
-        let students ={} ;
+//       try {
+//         const subjectSnapshot = await getDocs(subjectQuery);
+//         let students ={} ;
         
-        if (subjectSnapshot.empty) {
-          console.log("No matching documents.");
-        } else {
+//         if (subjectSnapshot.empty) {
+//           console.log("No matching documents.");
+//         } else {
 
-        let courseId;
-        subjectSnapshot.forEach((doc) => {
-         courseId= doc.data().courseId});
-         console.log("course Id",courseId)
-         const courseQuery = query(
-                    collection(db, 'courses'),
-                    where('id', '==',courseId))
+//         let courseId;
+//         subjectSnapshot.forEach((doc) => {
+//          courseId= doc.data().courseId});
+//          console.log("course Id",courseId)
+//          const courseQuery = query(
+//                     collection(db, 'courses'),
+//                     where('id', '==',courseId))
 
-         const courseSnapshot = await getDocs(courseQuery);
-         let courseName;
-         courseSnapshot.forEach((doc) => {
-            courseName=doc.data().name})
-         console.log("Course name",courseName)
+//          const courseSnapshot = await getDocs(courseQuery);
+//          let courseName;
+//          courseSnapshot.forEach((doc) => {
+//             courseName=doc.data().name})
+//          console.log("Course name",courseName)
 
 
-         const studentQuery = query(
-                  collection(db, "users"),
-                  where("userRole", "==", "student"),
-                  where("course", "==", courseName)
-                );
-                const studentSnapshot = await getDocs(studentQuery);
+//          const studentQuery = query(
+//                   collection(db, "users"),
+//                   where("userRole", "==", "student"),
+//                   where("course", "==", courseName)
+//                 );
+//                 const studentSnapshot = await getDocs(studentQuery);
 
 
              
 
 
-                studentSnapshot.forEach((doc) => {
-                students[doc.data().userID] = false
+//                 studentSnapshot.forEach((doc) => {
+//                 students[doc.data().userID] = false
                       
-                    });
-                    console.log("from add session",courseName, students);
+//                     });
+//                     console.log("from add session",courseName, students);
                
 
-        }
+//         }
       
         
      
-        await setDoc(doc(db, "attendance", sessionId), {
-          subjectCode: subjectCode,
-          lectureCode: lecturerId ,
-          sessionId: sessionId,
-          attendance: students,
-          createdAt: new Date()
-        });
+//         await setDoc(doc(db, "attendance", sessionId), {
+//           subjectCode: subjectCode,
+//           lectureCode: lecturerId ,
+//           sessionId: sessionId,
+//           attendance: students,
+//           createdAt: new Date()
+//         });
   
-        console.log("Attendance document created in Firestore");
-      } catch (error) {
-        console.log("Error creating attendance document", error);
-      }
+//         console.log("Attendance document created in Firestore");
+//       } catch (error) {
+//         console.log("Error creating attendance document", error);
+//       }
 
 
-   } 
+//    } 
 
 export const fetchSessions = async ({lecturerId}) => {
     const sessionQuery=query(collection(db,'sessions'),
@@ -163,7 +224,7 @@ export const fetchSessions = async ({lecturerId}) => {
     const querySnapshot = await getDocs(  attendanceQuery);
     const attendanceData=[];
     querySnapshot.forEach((doc)=>{
-      attendanceData.push({id:doc.id,...doc.data()})
+      attendanceData.push({id:doc.id,...doc.data(),createdAt: doc.data().createdAt.toDate() })
     })
     console.log("from fuction",attendanceData)
     return attendanceData
@@ -219,4 +280,19 @@ export const fetchSessions = async ({lecturerId}) => {
       }
     }
   
-    const signOutUser=()=>signOut(auth)
+  export const fetchSessionsAndAppointments = async () => {
+    const sessionsSnapshot = await getDocs(collection(db, "sessions"));
+    const appointmentsSnapshot = await getDocs(collection(db, "appointment"));
+  
+    const sessions = sessionsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  
+    const appointments = appointmentsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+   console.log('appointments',appointments,"sessions",sessions,'snap',sessionsSnapshot)
+    return { sessions, appointments };
+  };
