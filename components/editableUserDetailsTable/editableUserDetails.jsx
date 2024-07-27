@@ -8,6 +8,41 @@ import { db } from '@/utils/firebase/firebaseUtils';
 const EditableUserDetailsTable = ({ users, departments }) => {
   const [editableRow, setEditableRow] = useState(null);
   const [editedUsers, setEditedUsers] = useState(users);
+  const [filteredUsers, setFilteredUsers] = useState(users);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState({
+    department: '',
+    course: '',
+    role: '',
+  });
+  const courses = Array.from(new Set(users.map(user => user.course))).filter(Boolean);
+
+  useEffect(() => {
+    let filtered = editedUsers;
+
+    if (filters.department) {
+      filtered = filtered.filter(user => user.department === filters.department);
+    }
+
+    if (filters.course) {
+      filtered = filtered.filter(user => user.course === filters.course);
+    }
+
+    if (filters.role) {
+      filtered = filtered.filter(user => user.userRole === filters.role);
+    }
+
+    if (searchTerm) {
+        filtered = filtered.filter(user => 
+            (user.userName && user.userName.toLowerCase().includes(searchTerm.toLowerCase())) || 
+            (user.userID && user.userID.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    }
+
+    setFilteredUsers(filtered);
+  }, [filters, searchTerm, editedUsers]);
+
+ 
 
   const handleEditClick = (userId) => {
     setEditableRow(userId);
@@ -15,7 +50,7 @@ const EditableUserDetailsTable = ({ users, departments }) => {
 
   const handleSaveClick = async (userId) => {
     const userToUpdate = editedUsers.find(user => user.id === userId);
-    const userDocRef = doc(db, 'users', userId); // adjust the collection name if necessary
+    const userDocRef = doc(db, 'users', userId); 
 
     try {
       await updateDoc(userDocRef, userToUpdate);
@@ -24,6 +59,17 @@ const EditableUserDetailsTable = ({ users, departments }) => {
     } catch (error) {
       console.error('Error updating document: ', error);
     }
+  };
+
+  const handleFilterChange = (e) => {
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   const handleChange = (e, userId, field) => {
@@ -37,8 +83,50 @@ const EditableUserDetailsTable = ({ users, departments }) => {
   };
 
   return (
-    <div className='mt-20 custom-scrollbar '>
+    <div className='mt-2 custom-scrollbar '>
+    <div className="flex justify-between mb-6">
+    <div>
+      <label className="mr-2">Department:</label>
+      <select name="department" onChange={handleFilterChange} className="border rounded p-1">
+        <option value="">All</option>
+        {Object.entries(departments).map(([id, name]) => (
+          <option key={id} value={id}>{name}</option>
+        ))}
+      </select>
+    </div>
+
+    <div className="mr-4">
+          <label className="mr-2">Course:</label>
+          <select name="course" onChange={handleFilterChange} className="border rounded p-1">
+            <option value="">All</option>
+            {courses.map((course, index) => (
+              <option key={index} value={course}>{course}</option>
+            ))}
+          </select>
+        </div>
+
+    <div>
+      <label className="mr-2">Role:</label>
+      <select name="role" onChange={handleFilterChange} className="border rounded p-1">
+        <option value="">All</option>
+        <option value="student">Student</option>
+        <option value="lecturer">Lecturer</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+
+    <div>
+      <label className="mr-2">Search:</label>
+      <input
+        type="text"
+        onChange={handleSearchChange}
+        className="border rounded p-1"
+        placeholder="Search  Name"
+      />
+    </div>
+  </div>
     <Card className='custom-scrollbar  overflow-y-auto  overflow-x-auto '>
+    
     <Table className='font-semibold bg-white max-h-96'>
       <TableHeader>
         <TableRow>
@@ -54,7 +142,7 @@ const EditableUserDetailsTable = ({ users, departments }) => {
         </TableRow>
       </TableHeader>
       <TableBody className='text-[#6B7280] overflow-auto custom-scrollbar max-h-[500px] '>
-        {editedUsers.map(user => (
+        {filteredUsers.map(user => (
           <TableRow key={user.id}>
             <TableCell>
               <Avatar>

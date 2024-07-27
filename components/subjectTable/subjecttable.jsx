@@ -45,7 +45,7 @@ const subjects = [
 ];
 
 
-const SubjectTable = () => {
+const SubjectTable = ({timeTable}) => {
   return (
     <Table>
     <TableHeader>
@@ -58,16 +58,16 @@ const SubjectTable = () => {
       </TableRow>
     </TableHeader>
     <TableBody>
-      {subjects.map((item, index) => (
+    { timeTable.map((item, index) => (
         <TableRow key={index}>
           <TableCell>
-            <div className="font-medium">{item.subject}</div>
+            <div className="font-medium">{item.subjectName}</div>
           </TableCell>
           <TableCell >
               {item.subjectCode}
           </TableCell>
           <TableCell >
-            {item.department}
+            {item.departmentId}
           </TableCell>
         </TableRow>
       ))}

@@ -4,6 +4,8 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { fetchSessionsAndAppointments } from "@/app/services/lectureFirestoreService";
+import { useUserContext } from "@/app/context/userContext";
+
 
 const localizer = momentLocalizer(moment);
 
@@ -13,6 +15,7 @@ const CalendarIn = () => {
     const [events, setEvents] = useState([]);
     const [view, setView] = useState('month');
     const [date, setDate] = useState(new Date());
+    const {currentUser}=useUserContext()
 
 
 
@@ -46,7 +49,7 @@ const CalendarIn = () => {
 
       useEffect(() => {
         const getData = async () => {
-          const { sessions, appointments } = await fetchSessionsAndAppointments();
+          const { sessions, appointments } = await fetchSessionsAndAppointments({lecturerId:currentUser.userID});
           const transformedEvents = transformDataForCalendar(sessions, appointments);
           console.log("events",transformedEvents)
           setEvents(transformedEvents);

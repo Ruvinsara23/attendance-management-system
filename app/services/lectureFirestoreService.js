@@ -1,5 +1,5 @@
 
-import { setDoc,doc,query,collection,getDocs,where, updateDoc,getDoc} from 'firebase/firestore'
+import { setDoc,doc,query,collection,getDocs,where, updateDoc,getDoc,} from 'firebase/firestore'
 
 import { auth, db } from '@/utils/firebase/firebaseUtils'
 
@@ -215,11 +215,12 @@ export const fetchSessions = async ({lecturerId}) => {
 
     return sessionsData ;
   };
+ 
 
-
-  export const fetchAttendance=async()=>{
+  export const fetchAttendance=async({lecturerId})=>{
+    console.log(lecturerId,"from fetch function")
     const attendanceQuery=query(collection(db,'attendance'),
-    where('lectureCode',"==",'lec002'))
+    where('lectureCode',"==",lecturerId))
 
     const querySnapshot = await getDocs(  attendanceQuery);
     const attendanceData=[];
@@ -233,7 +234,7 @@ export const fetchSessions = async ({lecturerId}) => {
 
   }
 
-  export const fetchLecTimetable=async()=>{
+  export const fetchLecTimetable=async({lecturerId})=>{
     try {
       const timetablesCollection = collection(db, "timetables");
       const q = query(timetablesCollection);
@@ -244,7 +245,7 @@ export const fetchSessions = async ({lecturerId}) => {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         data.schedule.forEach(scheduleItem => {
-          if (scheduleItem.lectureID === 'lec003') {
+          if (scheduleItem.lectureID === lecturerId) {
             lecturerTimetable.push({
               courseId: data.courseId,
               departmentId: data.departmentId,
@@ -280,9 +281,11 @@ export const fetchSessions = async ({lecturerId}) => {
       }
     }
   
-  export const fetchSessionsAndAppointments = async () => {
-    const sessionsSnapshot = await getDocs(collection(db, "sessions"));
-    const appointmentsSnapshot = await getDocs(collection(db, "appointment"));
+  export const fetchSessionsAndAppointments = async ({lecturerId}) => {
+    const sessionsSnapshot = await getDocs(collection(db, "sessions"),
+    where('lectureCode',"==",lecturerId));
+    const appointmentsSnapshot = await getDocs(collection(db, "appointment"),
+    where('lectureCode',"==",lecturerId));
   
     const sessions = sessionsSnapshot.docs.map(doc => ({
       id: doc.id,
@@ -295,4 +298,54 @@ export const fetchSessions = async ({lecturerId}) => {
     }));
    console.log('appointments',appointments,"sessions",sessions,'snap',sessionsSnapshot)
     return { sessions, appointments };
+  };
+
+  export const fetchStudents=async()=>{
+    const studentQuery = query(
+      collection(db, "users"),
+      where("userRole", "==", "Student"),
+      where("department", "==", "eng")
+    );
+    const studentSnapshot = await getDocs(studentQuery);
+
+    const student=[];
+    studentSnapshot.forEach((doc)=>{
+      student.push({ id: doc.id, ...doc.data() })
+    })
+    console.log(student,"studentFrom firestore");
+    return student
+  }
+
+
+  export const updateUserProfileDetails= async (userID, updatedData) => {
+    try {
+      // 1. Create a query to find the document
+      const usersRef = collection(db, 'users');
+      const q = query(usersRef, where('userID', '==', userID));
+  
+      // 2. Execute the query
+      const querySnapshot = await getDocs(q);
+  
+      // 3. Check if the document exists
+      if (querySnapshot.empty) {
+        console.log('No matching documents.');
+        return { success: false, error: 'No matching documents found' };
+      }
+  
+  
+      const userDoc = querySnapshot.docs[0];
+      const userDocRef = doc(db, 'users', userDoc.id);
+  
+
+      const dataToUpdate = { ...updatedData};
+  
+      await updateDoc(userDocRef, dataToUpdate);
+  
+      console.log('User document updated successfully');
+      return { success: true };
+  
+    } catch (error) {
+      console.error('Error updating document: ', error);
+      return { success: false, error: error.message };
+    }
   };

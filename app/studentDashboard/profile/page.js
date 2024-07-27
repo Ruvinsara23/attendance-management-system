@@ -15,7 +15,8 @@ import Link from "next/link"
 
 import Userprofile from '@/components/userProfileCard/userprofile';
 import UserDetails from "@/components/userProfileCard/userDetails";
-import Profile from "@/components/profile/profile";
+import UserProfilePage from "@/components/userProfilePage/userProfilePage";
+
 
 
 
@@ -30,7 +31,7 @@ const StdProfilePage = () => {
     <main className="flex flex-1  flex-wrap gap-10  md:gap-8 md:p-8 justify-center align-middle">
   
   
-     <Profile />
+    <UserProfilePage />
 
     
         

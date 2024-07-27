@@ -1,3 +1,4 @@
+"use client"
 import { useContext, createContext,useState,useEffect } from "react";
 import { onAuthStateChangedListner } from "@/utils/firebase/firebaseUtils";
 import { logout } from "@/utils/firebase/firebaseUtils";

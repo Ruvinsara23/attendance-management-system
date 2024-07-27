@@ -11,6 +11,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { fetchAttendance } from '@/app/services/lectureFirestoreService'
 import AttendanceTable from '@/components/attendanceTable/attendanceTable'
 import { Card } from '@/components/ui/card'
+import { useUserContext } from '@/app/context/userContext'
 
 
 
@@ -23,10 +24,12 @@ const page = () => {
   const [subject, setSubject] = useState('All');
   const [department, setDepartment] = useState('All');
   const [status, setStatus] = useState('All');
+  const {currentUser}=useUserContext()
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchAndSetAttendance = async () => {
-      const data = await fetchAttendance();
+      const data = await fetchAttendance({lecturerId: currentUser.userID});
       setAttendanceData(data);
       console.log(data, "attendance");
     };
@@ -36,7 +39,7 @@ const page = () => {
 
   useEffect(() => {
     filterData();
-  }, [attendanceData, dateRange, subject, department, status]);
+  }, [attendanceData, dateRange, subject, department, status,searchTerm]);
 
   const filterData = () => {
     let data = [...attendanceData];
@@ -53,9 +56,9 @@ const page = () => {
       data = data.filter(item => item.subjectCode === subject);
     }
 
-    if (department && department !== 'All') {
-      data = data.filter(item => item.department === department);
-    }
+    // if (department && department !== 'All') {
+    //   data = data.filter(item => item.department === department);
+    // }
 
     if (status && status !== 'All') {
         data = data.map(item => {
@@ -71,11 +74,34 @@ const page = () => {
             );
             return { ...item, attendance: filteredAttendance };
         });
+       
+    
     }
+   // Replace with the desired student ID
 
+   if (searchTerm) {
+    data = data.filter(item => {
+      return item.attendance && Object.keys(item.attendance).some(studentId => 
+        studentId.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }).map(item => {
+      const filteredAttendance = Object.fromEntries(
+        Object.entries(item.attendance).filter(([studentId, attended]) => 
+          studentId.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+      return { ...item, attendance: filteredAttendance };
+    });
+  }
  console.log("This is from report ",data)
     setFilteredData(data);
   };
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+
+  
 
   const downloadReport = () => {
     // Implement download report logic
@@ -128,18 +154,16 @@ const page = () => {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="department">Department</Label>
-            <Select onValueChange={setDepartment}>
-              <SelectTrigger id="department">
-                <SelectValue placeholder="Select department" />
-              </SelectTrigger>
-              <SelectContent>
-                {uniqueDepartments.map(department => (
-                  <SelectItem key={department} value={department}>{department}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+              <Label htmlFor="search">Search</Label>
+              <input
+                type="text"
+                id="search"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="border rounded p-2 w-full"
+                placeholder="Search by student ID"
+              />
+            </div>
           <div className="space-y-2">
             <Label htmlFor="status">Status</Label>
             <Select onValueChange={setStatus}>

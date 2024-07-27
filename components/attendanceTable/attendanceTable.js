@@ -18,7 +18,7 @@ const AttendanceTable = ({attendanceData,studentIdFilter}) => {
       <Table >
         <TableHeader className='font-semibold bg-[] '>
           <TableRow className='text-[#1F2937] m-5'>
-            <TableHead className='text-[#1F2937]'>Student Name</TableHead>
+            <TableHead className='text-[#1F2937]'>Student ID</TableHead>
             <TableHead  className='text-[#1F2937]'>Subject Code</TableHead>
             <TableHead className='text-[#1F2937]' >Attendance Status</TableHead>
             <TableHead className='text-[#1F2937]' >Date and Time</TableHead>

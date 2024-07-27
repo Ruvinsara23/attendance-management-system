@@ -1,7 +1,7 @@
 // components/AddPredefinedData.js
 import { useState } from 'react';
 
-import { setDoc,doc,query,collection,getDocs,where} from 'firebase/firestore'
+import { setDoc,doc,query,collection,getDocs,where,addDoc} from 'firebase/firestore'
 import { db } from '@/utils/firebase/firebaseUtils'
 
 
@@ -409,53 +409,59 @@ const AddPredefinedData = () => {
 //     await Promise.all(promises);
 //   };
 
+const timetableData = {
+  courseId: "eng_course_4",
+  departmentId: "ENG",
+  schedule: [
+    {
+      day: "Monday",
+      lectureID: "lec041",
+      subjectCode: "CHE-201-1",
+      subjectName: "Fluid Mechanics",
+      time: "09:00-10:30"
+    },
+    {
+      day: "Monday",
+      lectureID: "lec042",
+      subjectCode: "CHE-201-2",
+      subjectName: "Thermodynamics",
+      time: "11:00-12:30"
+    },
+    {
+      day: "Tuesday",
+      lectureID: "lec043",
+      subjectCode: "CHE-201-3",
+      subjectName: "Chemical Process Principles",
+      time: "10:00-11:30"
+    },
+    {
+      day: "Wednesday",
+      lectureID: "lec044",
+      subjectCode: "CHE-201-4",
+      subjectName: "Heat Transfer",
+      time: "09:00-10:30"
+    },
+    {
+      day: "Thursday",
+      lectureID: "lec045",
+      subjectCode: "CHE-201-5",
+      subjectName: "Materials Science",
+      time: "11:00-12:30"
+    }
+  ]
+};
+
+
+const addTimetable = async (timetables) => {
+  try {
+    const docRef = await addDoc(collection(db, 'timetables'), timetables);
+    console.log('Document written with ID: ', docRef.id);
+  } catch (e) {
+    console.error('Error adding document: ', e);
+  }
+}
   const handleAddData = async () => {
-
-    const subjectQuery = query(
-        collection(db, 'subjects'),
-        where('code', '==', "ICT-101-3")
-      );
-      
-      try {
-        const subjectSnapshot = await getDocs(subjectQuery);
-        
-        if (subjectSnapshot.empty) {
-          console.log("No matching documents.");
-        } else {
-
-        let courseId;
-        subjectSnapshot.forEach((doc) => {
-         courseId= doc.data().courseId});
-         console.log("course Id",courseId)
-         const courseQuery = query(
-                    collection(db, 'courses'),
-                    where('id', '==',courseId))
-
-         const courseSnapshot = await getDocs(courseQuery);
-         let courseName;
-         courseSnapshot.forEach((doc) => {
-            courseName=doc.data().name})
-         console.log("Course name",courseName)
-
-
-         const studentQuery = query(
-                  collection(db, "users"),
-                  where("userRole", "==", "student"),
-                  where("course", "==", courseName)
-                );
-                const studentSnapshot = await getDocs(studentQuery);
-                let students ={} ;
-                studentSnapshot.forEach((doc) => {
-                    students[doc.data().userID] = true
-                      
-                    });
-                    console.log(students);
-               
-
-        }
-      } catch (error) {
-        console.error("Error getting subject documents: ", error);
-      }
+    addTimetable(timetableData);
     
     // try {
 

@@ -7,8 +7,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Input } from "@/components/ui/input"
 import { useUserContext } from '@/app/context/userContext'
 import { useSessionsContext } from '@/app/context/sessionContext'
-import { setDoc,doc,query,collection,getDocs,where} from 'firebase/firestore'
-import { db } from '@/utils/firebase/firebaseUtils'
+
 import { addSessions,addAttendance } from '@/app/services/lectureFirestoreService'
 
 

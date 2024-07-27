@@ -5,7 +5,7 @@ import { db } from '@/utils/firebase/firebaseUtils'
 
 
 export const addAppointment=async({formFields,appointmentId})=>{
-    const {studentName,studentId,date,time,subject,message,lecturer}=formFields
+    const {studentName,studentId,date,time,subject,message,lecturer,lecturerId}=formFields
 
     try{
         await setDoc(doc(db,"appointment",appointmentId),{
@@ -15,8 +15,9 @@ export const addAppointment=async({formFields,appointmentId})=>{
             time,
             subject,
             message,
-            lecturer:'Lecturer 3',
-            lecturerId:"",
+            lecturerId,
+            lecturer,
+      
             status:'pending',
             createdAt: new Date(),
         }),
@@ -32,9 +33,9 @@ export const addAppointment=async({formFields,appointmentId})=>{
 
 
 
-export const fetchAppointment = async () => {
+export const fetchAppointment = async ({userId,userRole}) => {
     const appointmentQuery=query(collection(db,'appointment'),
-      where('lecturer','==',"Lecturer 3"),
+      where(userRole,'==',userId),
       
      )
 
@@ -86,9 +87,9 @@ export const fetchAppointment = async () => {
   }
 
 
-  export const fetchStuAttendance=async()=>{
+  export const fetchStuAttendance=async(userId)=>{
     const attendanceQuery=query(collection(db,'attendance'),
-    where('attendance.stuict21001', 'in', [true, false]),
+    where(`attendance.${userId}`, 'in', [true, false]),
 )
 
     const querySnapshot = await getDocs( attendanceQuery);
@@ -105,10 +106,10 @@ export const fetchAppointment = async () => {
   }
 
 
-  export const fetchQRCode = async () => {
+  export const fetchQRCode = async (userId) => {
     try{
       const qrCodeQuery=query(collection(db,'users'),
-    where('userID',"==",'stueng21002')
+    where('userID',"==",userId)
   )
   const querySnapshot=await getDocs(qrCodeQuery);
    let qrCodeUrl = null;
@@ -142,9 +143,9 @@ export const fetchAppointment = async () => {
     return attendanceData;
   };
 
-  export const fetchStdTimetable = async () => {
+  export const fetchStdTimetable = async ({departmentId}) => {
     const timetableCollection = collection(db, 'timetables'); 
-    const timetableQuery = query(timetableCollection, where('courseId', '==', 'ICT-103'));
+    const timetableQuery = query(timetableCollection, where('departmentId', '==', `${departmentId}`));
     const timetableSnapshot = await getDocs(timetableQuery);
     const timetableList = timetableSnapshot.docs.map(doc => doc.data());
     return timetableList;

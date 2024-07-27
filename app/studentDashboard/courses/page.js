@@ -1,4 +1,4 @@
-"use client"
+ "use client"
 
 import Link from "next/link"
 import {Avatar,AvatarFallback, AvatarImage,} from "@/components/ui/avatar"
@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { useState,useEffect } from "react"
 import { fetchStdTimetable } from "@/app/services/studentFirestoreService"
+import { useUserContext } from "@/app/context/userContext"
 
 // const timeTableData=[{
 //   "courseTitle": "Introduction to Computer Science",
@@ -71,9 +72,10 @@ import { fetchStdTimetable } from "@/app/services/studentFirestoreService"
 
 const StdCoursesPage = () => {
  const [timeTable,setTimeTable]=useState([])
+ const {currentUser}=useUserContext()
 
  const fetchAndSetStuTimetable=async()=>{
-    const stuTimeTable= await fetchStdTimetable()
+    const stuTimeTable= await fetchStdTimetable({departmentId:currentUser.department})
     const flatTimeTable = stuTimeTable.length > 0 ? stuTimeTable[0].schedule : [];
     setTimeTable(flatTimeTable);
     console.log('stuTimetable', flatTimeTable)

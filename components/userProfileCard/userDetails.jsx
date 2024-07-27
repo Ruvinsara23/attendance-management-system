@@ -7,72 +7,74 @@ import {
 import { Button } from '../ui/button'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
+import { useUserContext } from '@/app/context/userContext'
 
 
 
 const UserDetails = () => {
+ const {currentUser}=useUserContext()
+ const fullName = currentUser.userName;
+ const [firstName, lastName] = fullName.split(' ');
+
     return (
       <div className='flex min-h-screen w-full flex-col justify-center '>
      <div className='flex place-items-center m-7 align-middle justify-center flex-wrap '>
      <img className="w-20 h-20 rounded-full mr-4" src="/Ellipse 2a.png" alt="Rounded avatar" />
     <div className='flex-none align-middle justify-center '>
-    <h2 className="text-sm font-medium leading-none"><strong>Jane Smith</strong></h2>
-    <h5>janesmith@example.com</h5>
+    <h2 className="text-sm font-medium leading-none"><strong>{currentUser.userName}</strong></h2>
+    <h5>{currentUser.email}</h5>
 
     </div>
      </div>
-     <div>
-     <h3 className="text-sm font-medium leading-none"><strong>Personal Infromation</strong></h3>
-     <div className='flex m-[16px] '>
-     <div className='flex-wrap m-[30px]  '>
-     <div className='mb-[16px] flex flex-col '><Label className="text-[18px] font-medium leading-none mb-2" >First name</Label>
-     <Label className="text-[16px] text-muted-foreground" >Jane</Label></div>
-     <div className='mb-[16px] flex flex-col '>
-     <Label className="text-[18px] font-medium leading-none mb-2" >Date of Birt</Label>
-     <Label className="text-[16px] text-muted-foreground" >2000/04 /20</Label></div>
-     <div>
-     </div>
-     </div>
-     <div className='flex-wrap m-[24px]'>
-     <div className='mb-[16px] flex flex-col '>
-     <Label className="text-[18px] font-medium leading-none mb-2" >Last Name</Label>
-     <Label className="text-[16px] text-muted-foreground" > Smith </Label></div>
-     <div>
-     </div>
-     <div className='mb-[16px] flex flex-col '>
-     <Label className="text-[18px] font-medium leading-none mb-2" >Phone Number</Label>
-     <Label className="text-[16px] text-muted-foreground" > 0765432566 </Label></div>
-     </div>
-     </div>
-     </div>
-     <div>
-     <h3 className="text-sm font-medium leading-none"><strong>Personal Location</strong></h3>
-     <div><div className='m-[28px] ml-[38px] max-w-[480px]'><Label >Address</Label>
-     <Input placeholder="N0 123, Kaluthara rd, Mathugama"></Input ></div></div>
-     <div className='flex m-[16px] '>
-     <div>
-     </div>
-     <div className='flex-wrap m-[24px]  '>
-     <div className='mb-[16px]'><Label >NO</Label>
-     <Input placeholder="N0 123"></Input></div>
-     <div>
-     <Label>Province</Label>
-     <Input placeholder="western"></Input> 
-     </div>
-     
-     </div>
-     <div className='flex-wrap m-[24px]'>
-     <div className='mb-[16px]'>
-     <Label>City</Label>
-     <Input placeholder=" Mathugama"></Input>
-     </div>
-     <div>
-     <Label>Postal code</Label>
-     <Input placeholder="123"></Input>
-     </div>
-     </div>
-     </div>
-     </div>
+     <div className="grid gap-8 w-[720px] p-20">
+            <div className="grid gap-6">
+              <p className="text-muted-foreground text-lg font-medium">Personal Information</p>
+              <div className="grid grid-cols-2 mr-5 gap-6">
+                <div className="grid gap-2">
+                  <p className="text-muted-foreground">First Name</p>
+                  <p>{firstName}</p>
+                </div>
+                <div className="grid gap-2">
+                  <p className="text-muted-foreground">Last Name</p>
+                  <p>{lastName}</p>
+                </div>
+                <div className="grid gap-2">
+                  <p className="text-muted-foreground">Date of Birth</p>
+                  <p>{currentUser.dateOfBirth}</p>
+                </div>
+                <div className="grid gap-2">
+                  <p className="text-muted-foreground">Department</p>
+                  <p>{currentUser.department}</p>
+                </div>
+                <div className="grid gap-2">
+                  <p className="text-muted-foreground">Course</p>
+                  <p>{currentUser.userRole}</p>
+                </div>
+                <div className="grid gap-2">
+                  <p className="text-muted-foreground">User ID</p>
+                  <p>{currentUser.userID}</p>
+                </div>
+              </div>
+            </div>
+            <div className="grid gap-6">
+              <p className="text-muted-foreground text-lg font-medium">Contact Information</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <p className="text-muted-foreground">Address</p>
+                  <p>{currentUser.address}</p>
+                </div>
+                <div className="grid gap-2">
+                  <p className="text-muted-foreground">Phone</p>
+                  <p>{currentUser.phoneNumber}</p>
+                </div>
+                <div className="grid gap-2">
+                  <p className="text-muted-foreground">Email</p>
+                  <p>{currentUser.email}</p>
+                </div>
+              </div>
+            </div>
+           
+          </div>
       </div>
     )
   }

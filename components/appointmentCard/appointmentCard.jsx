@@ -93,7 +93,7 @@ const AppointmentCard = ( {
         )}
         {status === 'confirm' && (
           <Button onClick={() => updateStatus(appointment.id, 'complete')} size="sm">
-            Reschedule
+            Complete
           </Button>
         )}
       </div>

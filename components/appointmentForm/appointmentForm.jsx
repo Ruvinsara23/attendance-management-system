@@ -1,4 +1,4 @@
-'use client'
+  'use client'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -19,13 +19,14 @@ date:'',
 time:'',
 subject:'',
 message:'',
-lecturer:''
+lecturer:'',
+ lecturerId:''
 
 }
-const AppointmentForm =({onAppointmentCreated })=> {
+const  AppointmentForm =({onAppointmentCreated,currentUser })=> {
   const [lecturers,setLecturers]=useState([])
  const [formFields,setFormFields]=useState(defaultFormFields)
- const {studentName,studentId,date,time,subject,message,lecturer}=formFields
+ const {studentName,studentId,date,time,subject,message,lecturer,lecturerId}=formFields
 
 
  useEffect(() => {
@@ -36,6 +37,17 @@ const AppointmentForm =({onAppointmentCreated })=> {
 
   fetchLecturers();
 }, [])
+
+
+useEffect(() => {
+  if (currentUser) {
+    setFormFields((prevFields) => ({
+      ...prevFields,
+      studentName: currentUser.userName,
+      studentId: currentUser.userID
+    }));
+  }
+}, [currentUser])
  
  const handleChange=(event)=>{
   const {name,value}=event.target
@@ -44,17 +56,25 @@ const AppointmentForm =({onAppointmentCreated })=> {
  }
 
  const handleSelectChange = (value, name) => {
-  setFormFields({ ...formFields, [name]: value })
-}
+  const { lecturerName, lecturerId } = JSON.parse(value);
+  setFormFields({ ...formFields, lecturer: lecturerName, lecturerId });
+};
 
 const resetFormFields = () => {
-  setFormFields(defaultFormFields);
+  setFormFields({
+    ...defaultFormFields,
+    studentName: currentUser.userName,
+    studentId: currentUser.userID
+  });
 };
+
 const appointmentId=`${studentId}${Date.now()}`
+
+
 const handleSubmit=(event)=>{
   event.preventDefault()
   
-  addAppointment({formFields,appointmentId})
+addAppointment({formFields,appointmentId})
   resetFormFields()
   onAppointmentCreated ()
 }
@@ -74,11 +94,11 @@ const handleSubmit=(event)=>{
       <CardContent className="space-y-4 ">
         <div className="space-y-2">
           <Label htmlFor="student-name">Student Name</Label>
-          <Input id="student-name" placeholder="Enter student name" name='studentName' onChange={handleChange} value={studentName} />
+          <Input id="student-name" name="studentName" value={studentName} readOnly />
         </div>
         <div className="space-y-2">
           <Label htmlFor="student-enroll">Student Enrollment Number</Label>
-          <Input id="student-enroll" placeholder="Enter enrollment number" name='studentId' onChange={handleChange} value={studentId} />
+          <Input id="student-enroll" name="studentId" value={studentId} readOnly />
         </div>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -109,7 +129,9 @@ const handleSubmit=(event)=>{
             </SelectTrigger>
             <SelectContent>
             {lecturers.map((lecturer) => (
-              <SelectItem key={lecturer.id} value={lecturer.userName}>{lecturer.userName}</SelectItem>
+              <SelectItem key={lecturer.id} value={JSON.stringify({ lecturerName: lecturer.userName, lecturerId: lecturer.userID })}>
+                {lecturer.userName}
+              </SelectItem>
             ))}
 </SelectContent>
           </Select>

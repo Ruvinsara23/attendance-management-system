@@ -47,7 +47,8 @@ import NavBar from '@/components/navBar/navBar'
 import Header from '@/components/header/studentHeader'
 import DashboardCard from '@/components/dashbordCard/dashboardCard'
 import { fetchStuAttendance,fetchQRCode } from '../services/studentFirestoreService'
-
+import { useRef } from 'react'
+import { useUserContext } from '../context/userContext'
 
 
 const cardData = [
@@ -134,16 +135,30 @@ const studentDashboard = () => {
   const [attendanceData,setAttendanceData  ]=useState([])
   const [counts, setCounts] = useState({ totalCount: 0, absentCount: 0 });
   const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const [subjectFilter, setSubjectFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [subjects, setSubjects] = useState([])
+  const imgRef = useRef(null);
+  const {currentUser}=useUserContext()
 
-  const fetchAndSetStuAttendance=async()=>{
-    const attendanceData=await  fetchStuAttendance()
-    setAttendanceData(attendanceData)
-    console.log(attendanceData," fromstu")
+  // const fetchAndSetStuAttendance=async()=>{
+  //   const attendanceData=await  fetchStuAttendance()
+  //   setAttendanceData(attendanceData)
+  //   console.log(attendanceData," fromstu")
   
-    };
+  //   };
+
+  const userId = currentUser.userID;
+
+  const fetchAndSetStuAttendance = async () => {
+    const data = await fetchStuAttendance(userId);
+    setAttendanceData(data);
+    const uniqueSubjects = [...new Set(data.map(item => item.subjectCode))];
+    setSubjects(uniqueSubjects);
+  };
 
     const fetchAndSetQrCode=async()=>{
-      const qrCodeUrl=await fetchQRCode()
+      const qrCodeUrl=await fetchQRCode(userId)
       setQrCodeUrl(qrCodeUrl)
     }
   
@@ -151,7 +166,7 @@ const studentDashboard = () => {
     const calculateAttendanceCounts=async()=>{
       let presentCount = 0;
       let absentCount = 0;
-    const attendanceData=await fetchStuAttendance()
+    const attendanceData=await fetchStuAttendance(userId)
    
     console.log(attendanceData,"attendance")
     //  [
@@ -162,7 +177,7 @@ const studentDashboard = () => {
     
     attendanceData.forEach(entry => {
         const { attendance } = entry;
-        const attendanceValue = attendance["stuict21001"];
+        const attendanceValue = attendance[`${userId}`];
 
         if (attendanceValue === true) {
             presentCount++;
@@ -171,8 +186,8 @@ const studentDashboard = () => {
         }
     });
 
-    console.log("Total Present for stuict21001:", presentCount);
-    console.log("Total Absent for stuict21001:", absentCount);
+    console.log(`Total Present for ${userId} :`, presentCount);
+    console.log(`Total Absent for ${userId} :`, absentCount);
 
     return { presentCount, absentCount };
 };
@@ -188,13 +203,36 @@ const studentDashboard = () => {
   };
   
 
-
+  const handleDownload = () => {
+    if (imgRef.current) {
+      const link = document.createElement('a');
+      link.href = imgRef.current.src;
+      link.download = 'qrcode.png';
+      link.click();
+    }
+  }
     useEffect(()=>{
-      fetchAndSetQrCode();
+      fetchAndSetQrCode(userId);
       fetchAndSetStuAttendance()
       updateCardData()
     },[counts])
 
+    const getFilteredData = () => {
+      return attendanceData.filter(entry => {
+        // Apply subject filter
+        if (subjectFilter && entry.subjectCode !== subjectFilter) return false;
+  
+        // Apply status filter for the specific student
+        const studentId = userId;  // Change this to the desired student ID
+        if (statusFilter === "Present" && entry.attendance[studentId] !== true) return false;
+        if (statusFilter === "Absent" && entry.attendance[studentId] !== false) return false;
+  
+        return true;
+      });
+    };
+  
+
+   
   return (
     <div className="flex min-h-screen w-full flex-col">
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
@@ -220,7 +258,21 @@ const studentDashboard = () => {
             </Button>
           </CardHeader>
           <CardContent className="custom-scrollbar overflow-x-auto overflow-y-auto">
-          <AttendanceTable attendanceData={attendanceData} studentIdFilter="stuict21001"  />
+          <div className="mb-4 flex gap-4">
+                <select onChange={(e) => setSubjectFilter(e.target.value)} className="p-2 border rounded">
+                  <option value="">All Subjects</option>
+                  {subjects.map((subject, index) => (
+                    <option key={index} value={subject}>{subject}</option>
+                  ))}
+                </select>
+                <select onChange={(e) => setStatusFilter(e.target.value)} className="p-2 border rounded">
+                  <option value="">All Statuses</option>
+                  <option value="Present">Present</option>
+                  <option value="Absent">Absent</option>
+                </select>
+              </div>
+          <AttendanceTable attendanceData={getFilteredData ()} studentIdFilter={userId}
+              />
           </CardContent>
         </Card>
         <Card className="border-[#6418C3] p-14 pt-6 shadow-xl" x-chunk="dashboard-01-chunk-5" >
@@ -232,10 +284,10 @@ const studentDashboard = () => {
           </CardHeader>
           <CardContent className="flex justify-center gap-8 ">
 
-          {qrCodeUrl ? <img src={qrCodeUrl} alt="User QR Code" className='w-full h-full' /> : <p>Loading QR Code...</p>}
+          {qrCodeUrl ? <img ref={imgRef} src={qrCodeUrl} alt="User QR Code" className='w-full h-full' /> : <p>Loading QR Code...</p>}
           </CardContent>
           <CardFooter>
-          <Button className="w-full">Download </Button>
+          <Button className="w-full" onClick={handleDownload}>Download </Button>
           </CardFooter>
         </Card>
       </div>

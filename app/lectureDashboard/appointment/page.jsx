@@ -9,14 +9,17 @@ import { Input } from "@/components/ui/input"
 import AppointmentCard from '@/components/appointmentCard/appointmentCard'
 import { fetchAppointment,updateAppointmentStatus } from '@/app/services/studentFirestoreService'
 import { useState,useEffect } from 'react'
+import ApointmentFormLec from '@/components/appointmentFormLec/apointmentFormLec'
+import { useUserContext } from '@/app/context/userContext'
 
 
 
 const  lecAppoinment = () => {
   const [appointments,setAppointments]=useState([])
+  const {currentUser}=useUserContext()
 
   const fetchAndSetappointments = async () => {
-    const appointmentsData = await fetchAppointment();
+    const appointmentsData = await fetchAppointment({userId:currentUser.userID,userRole:'lecturerId'});
     setAppointments(appointmentsData);
     console.log(appointmentsData )
   };
@@ -54,54 +57,7 @@ const  lecAppoinment = () => {
       </div>
     </section>
     <section>
-      <h2 className="text-2xl font-bold mb-4">Create New Appointment</h2>
-      <Card className="border-[#4D11A7]">
-        <CardContent className="p-4 ">
-          <form>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              <div>
-                <Label htmlFor="student">Student</Label>
-                <Select id="student">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select student" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="john-doe">John Doe</SelectItem>
-                    <SelectItem value="jane-smith">Jane Smith</SelectItem>
-                    <SelectItem value="michael-johnson">Michael Johnson</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="subject">Subject</Label>
-                <Select id="subject">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select subject" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="math">Math</SelectItem>
-                    <SelectItem value="english">English</SelectItem>
-                    <SelectItem value="science">Science</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              <div>
-                <Label htmlFor="date">Date</Label>
-                <Input type="date" id="date" />
-              </div>
-              <div>
-                <Label htmlFor="time">Time</Label>
-                <Input type="time" id="time" />
-              </div>
-            </div>
-            <div className="flex justify-end">
-              <Button type="submit">Create Appointment</Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+    <ApointmentFormLec currentUser={currentUser}  onAppointmentCreated={fetchAndSetappointments}/>
     </section>
   </div>
   )

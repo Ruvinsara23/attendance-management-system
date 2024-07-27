@@ -17,6 +17,8 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import AddData from '@/components/addData/addData'
 import { fetchAttendance } from '../services/lectureFirestoreService'
 import { useState,useEffect } from 'react'
+import { useUserContext } from '../context/userContext'
+
 
 
 const exampleData = [
@@ -106,13 +108,16 @@ const attendanceData = [
 const LectureDashboard = () => {
  const [attendanceData,setAttendanceData  ]=useState([])
  const [counts, setCounts] = useState({ totalCount: 0, absentCount: 0 });
+ const {currentUser}=useUserContext()
 //  const [testAttendanceData,settestAttendanceData ]=useState([testAttendanceData])
 
 
  const fetchAndSetAttendance=async()=>{
-  const attendanceData=await  fetchAttendance()
+  console.log(currentUser, "current user before fetch attendance");
+  const attendanceData=await  fetchAttendance({lecturerId:currentUser.userID})
   setAttendanceData(attendanceData)
   console.log(attendanceData,"attendance")
+  console.log(currentUser,"current user from fetch attendance")
 
   };
 
@@ -120,7 +125,7 @@ const LectureDashboard = () => {
 const calculateAttendanceCounts=async()=>{
     let totalCount = 0;
     let absentCount = 0;
-  const attendanceData=await fetchAttendance()
+  const attendanceData=await fetchAttendance({lecturerId:currentUser.userID})
  
   console.log(attendanceData,"attendance")
   //  [
@@ -160,13 +165,17 @@ const updateCardData = async () => {
 
 
  useEffect(()=>{
+  if (currentUser) {
+    fetchAndSetAttendance();
+    updateCardData()
   
-  fetchAndSetAttendance()
-  updateCardData()
+  }
+  
+ 
  
 ;
 
- },[counts])
+ },[counts,currentUser])
 
   return (
     <div className="flex min-h-screen w-full flex-col">

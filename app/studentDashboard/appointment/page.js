@@ -6,16 +6,20 @@ import { Separator } from "@/components/ui/separator"
 import { useEffect, useState } from "react";
 import { fetchAppointment,updateAppointmentStatus,getLecturers } from "@/app/services/studentFirestoreService";
 import AppointmentCardTest from "@/components/appointmentCard/testAppointmentCard";
+import { useUserContext } from "@/app/context/userContext";
 
 
 
 const StdAppointmentPage = () => {
    const [appointments,setAppointments]=useState([])
+   const {currentUser}=useUserContext()
+
+   const userId=currentUser.userID
 
 
 
    const fetchAndSetappointments = async () => {
-    const appointmentsData = await fetchAppointment();
+    const appointmentsData = await fetchAppointment({userId,userRole:'studentId'});
     setAppointments(appointmentsData);
     console.log(appointmentsData )
   };
@@ -66,7 +70,7 @@ const StdAppointmentPage = () => {
       
       <section>
         <h2 className="text-2xl font-semibold  text-[#374151]  mb-4">Create New Appointment</h2>
-       <AppointmentForm  onAppointmentCreated={fetchAndSetappointments } />
+       <AppointmentForm  onAppointmentCreated={fetchAndSetappointments } currentUser={currentUser} />
       </section>
     </div>
 

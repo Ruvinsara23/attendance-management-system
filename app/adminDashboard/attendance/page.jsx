@@ -10,6 +10,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 import { fetchAttendanceForAdmin } from '@/app/services/adminFirestoreService'
 import AttendanceTable from '@/components/attendanceTable/attendanceTable'
+import { useUserContext } from '@/app/context/userContext'
 
 
 
@@ -22,15 +23,21 @@ const page = () => {
   const [subject, setSubject] = useState('All');
   const [department, setDepartment] = useState('All');
   const [status, setStatus] = useState('All');
+  const {currentUser}=useUserContext()
 
   useEffect(() => {
-    const fetchAndSetAttendance = async () => {
-      const data = await fetchAttendanceForAdmin ();
-      setAttendanceData(data);
-      console.log(data, "attendance");
-    };
+    if(currentUser){
 
-    fetchAndSetAttendance();
+      const fetchAndSetAttendance = async () => {
+        const data = await fetchAttendanceForAdmin ();
+        setAttendanceData(data);
+        console.log(data, "attendance");
+      };
+      fetchAndSetAttendance();
+    }
+    
+
+    
   }, []);
 
   useEffect(() => {
