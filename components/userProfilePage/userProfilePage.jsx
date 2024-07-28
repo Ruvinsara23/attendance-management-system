@@ -37,38 +37,38 @@ const UserProfilePage = () => {
   };
 
     return (
-    <div className='flex min-h-screen w-full '>
-    <main className="flex flex-1  flex-wrap gap-10 p-4 md:gap-8 md:p-8 justify-center align-middle">
-    {isEditing ?(
-    <Card className="max-w-[620px]">
-    <CardHeader className="flex flex-row items-center">
-       <div className="grid gap-4">
-         <CardTitle>User profile</CardTitle>
-         <CardTitle><Button onClick={handleEdit}>Edit user</Button></CardTitle>
-  
-       </div>
-     </CardHeader>
-     <CardContent>
-     <UserDetails />
-     </CardContent>
-   </Card>
-  ) :(
-    <Card className="max-w-[620px]">
-    <CardHeader className="flex flex-row items-center">
-            <div className="grid gap-4">
-              <CardTitle>Edit your profile</CardTitle>
-              <CardDescription>
-               You can update  your  profile.
-              </CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent>
-          <Userprofile onSave={handleSave} />
-          </CardContent>
-        </Card>
-      )}
-        </main>
-
+      <div className="flex min-h-screen w-full">
+      <main className="flex flex-1 flex-wrap gap-10 p-4 pb-0 md:gap-8 md:p-8 justify-center align-middle">
+        {isEditing ? (
+          <Card className="max-w-[620px]">
+            <CardHeader className="grid gap-2">
+              <div className="flex justify-between">
+                <CardTitle>User profile</CardTitle>
+                <CardTitle>
+                  <Button onClick={handleEdit}>Edit user</Button>
+                </CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <UserDetails />
+            </CardContent>
+          </Card>
+        ) : (
+          <Card className="max-w-[620px]">
+            <CardHeader className="flex flex-row items-center">
+              <div className="grid">
+                <CardTitle>Edit your profile</CardTitle>
+                <CardDescription>
+                  You can update your profile.
+                </CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Userprofile onSave={handleSave} />
+            </CardContent>
+          </Card>
+        )}
+      </main>
     </div>
     );
   };

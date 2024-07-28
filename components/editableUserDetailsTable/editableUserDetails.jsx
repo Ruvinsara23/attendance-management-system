@@ -1,6 +1,6 @@
 import React, { useState ,useEffect} from 'react';
 import {Table,TableBody,TableCell,TableHead,TableHeader,TableRow,} from "@/components/ui/table"
-import { Card, CardHeader } from '../ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Avatar,AvatarImage,AvatarFallback } from '../ui/avatar'
 import { doc,updateDoc } from 'firebase/firestore';
 import { db } from '@/utils/firebase/firebaseUtils';
@@ -84,8 +84,13 @@ const EditableUserDetailsTable = ({ users, departments }) => {
 
   return (
     <div className='mt-2 custom-scrollbar '>
-    <div className="flex justify-between mb-6">
-    <div>
+    <Card className='custom-scrollbar  overflow-y-auto  overflow-x-auto '>
+    <div >
+    <CardHeader >
+    <CardTitle>User Details Table</CardTitle>
+    <CardDescription>All user details Display this table</CardDescription>
+    <div className='flex justify-between mb-6'>
+    <div  >
       <label className="mr-2">Department:</label>
       <select name="department" onChange={handleFilterChange} className="border rounded p-1">
         <option value="">All</option>
@@ -124,21 +129,23 @@ const EditableUserDetailsTable = ({ users, departments }) => {
         placeholder="Search  Name"
       />
     </div>
+    </div>
+    </CardHeader> 
   </div>
-    <Card className='custom-scrollbar  overflow-y-auto  overflow-x-auto '>
-    
+  
+    <CardContent>
     <Table className='font-semibold bg-white max-h-96'>
       <TableHeader>
-        <TableRow>
-          <TableHead>User Profile</TableHead>
-          <TableHead>User Name</TableHead>
-          <TableHead>UserId</TableHead>
-          <TableHead>Course</TableHead>
-          <TableHead>Department</TableHead>
-          <TableHead>Address</TableHead>
-          <TableHead>Phone Number</TableHead>
-          <TableHead>User Role</TableHead>
-          <TableHead>Action</TableHead>
+        <TableRow className='text-[#1F2937] m-5'>
+          <TableHead className='text-[#1F2937]'>User Profile</TableHead>
+          <TableHead className='text-[#1F2937]'>User Name</TableHead>
+          <TableHead className='text-[#1F2937]'>UserId</TableHead>
+          <TableHead className='text-[#1F2937]'>Course</TableHead>
+          <TableHead className='text-[#1F2937]'>Department</TableHead>
+          <TableHead className='text-[#1F2937]'>Address</TableHead>
+          <TableHead className='text-[#1F2937]'>Phone Number</TableHead>
+          <TableHead className='text-[#1F2937]'>User Role</TableHead>
+          <TableHead className='text-[#1F2937]'  >Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody className='text-[#6B7280] overflow-auto custom-scrollbar max-h-[500px] '>
@@ -208,6 +215,7 @@ const EditableUserDetailsTable = ({ users, departments }) => {
         ))}
       </TableBody>
     </Table>
+    </CardContent>
     </Card>
     </div>
   );

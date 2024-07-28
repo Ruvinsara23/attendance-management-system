@@ -12,7 +12,7 @@ import { useUserContext } from '@/app/context/userContext'
 import { useState,useEffect } from 'react'
 import { updateUserProfileDetails } from '@/app/services/lectureFirestoreService'
 import { updateUserDetails } from '@/app/services/adminFirestoreService'
-
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const defaultFormFields = {
   userName: '',
@@ -33,6 +33,7 @@ const defaultFormFields = {
 const Userprofile = ({onSave}) => {
   const{currentUser}=useUserContext()
   const [formFields, setFormFields] = useState(defaultFormFields);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     // Initialize form fields with currentUser data
@@ -55,6 +56,12 @@ const Userprofile = ({onSave}) => {
     }
   }, [currentUser]);
 
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormFields(prevFields => ({
@@ -66,12 +73,21 @@ const Userprofile = ({onSave}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (image) {
+      const storage = getStorage();
+      const storageRef = ref(storage, `users/${currentUser.userID}/${image.name}`);
+      await uploadBytes(storageRef, image);
+      const photoUrl = await getDownloadURL(storageRef);
+      updatedData.photoUrl = photoUrl;
+    }
     // Create an object with only the fields that have changed
     const updatedData = Object.keys(formFields).reduce((acc, key) => {
       if (formFields[key] !== currentUser[key]) {
         acc[key] = formFields[key];
       }
       return acc;
+
+      
     }, {});
 
     // Ensure that userRole and userID are preserved
@@ -92,7 +108,10 @@ const Userprofile = ({onSave}) => {
     <div className='flex min-h-screen w-full flex-col justify-center align-baseline'>
    <div className='flex m-7 align-middle justify-center '>
    <img className="w-20 h-20 rounded-full mr-4" src="/Ellipse 2a.png" alt="Rounded avatar" />
-   <Button variant="outline" >Change Profile picture</Button>
+   <label className="btn btn-outline">
+   Change Profile picture
+   <input type="file" onChange={handleImageChange} hidden />
+ </label> 
    </div>
    <div className="grid gap-6">
    <p className="text-muted-foreground text-lg font-medium">Personal Information</p>

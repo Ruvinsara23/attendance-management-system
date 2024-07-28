@@ -84,7 +84,36 @@ const handleSelectChange = (name, value) => {
 
 }
 
-const getMaxUserID = async (departmentId, academicYear) => {
+// const getMaxUserID = async (departmentId, academicYear) => {
+//   const userCollection = collection(db, 'users');
+//   const userQuery = query(userCollection, where('department', '==', departmentId), where('academicYear', '==', academicYear));
+//   const querySnapshot = await getDocs(userQuery);
+  
+//   let maxID = 0;
+//   querySnapshot.forEach(doc => {
+//     const userId = doc.data().userID;
+//     const regex = new RegExp(`^stu${departmentId}${academicYear.slice(-2)}(\\d{3})$`);
+//     const match = userId.match(regex);
+//     if (match) {
+//       const userNumber = parseInt(match[1], 10);
+//       if (userNumber > maxID) {
+//         maxID = userNumber;
+//       }
+//     }
+//   });
+//   return maxID;
+// };
+
+
+
+
+// const createUserID = async (department, academicYear) => {
+//   const maxUserID = await getMaxUserID(department, academicYear);
+//   const newUserIDNumber = (maxUserID + 1).toString().padStart(3, '0');
+//   return `stu${department}${academicYear.slice(-2)}${newUserIDNumber}`;
+// };
+
+const getMaxUserID = async (departmentId, academicYear, userRole) => {
   const userCollection = collection(db, 'users');
   const userQuery = query(userCollection, where('department', '==', departmentId), where('academicYear', '==', academicYear));
   const querySnapshot = await getDocs(userQuery);
@@ -92,7 +121,16 @@ const getMaxUserID = async (departmentId, academicYear) => {
   let maxID = 0;
   querySnapshot.forEach(doc => {
     const userId = doc.data().userID;
-    const regex = new RegExp(`^stu${departmentId}${academicYear.slice(-2)}(\\d{3})$`);
+    let regex;
+    
+    if (userRole === 'student') {
+      regex = new RegExp(`^stu${departmentId}${academicYear.slice(-2)}(\\d{3})$`);
+    } else if (userRole === 'lecturer') {
+      regex = new RegExp(`^lec${departmentId}(\\d{3})$`);
+    } else if (userRole === 'admin') {
+      regex = new RegExp(`^admin${departmentId}(\\d{3})$`);
+    }
+    
     const match = userId.match(regex);
     if (match) {
       const userNumber = parseInt(match[1], 10);
@@ -104,11 +142,20 @@ const getMaxUserID = async (departmentId, academicYear) => {
   return maxID;
 };
 
-const createUserID = async (department, academicYear) => {
-  const maxUserID = await getMaxUserID(department, academicYear);
+const createUserID = async (department, academicYear, userRole) => {
+  const maxUserID = await getMaxUserID(department, academicYear, userRole);
   const newUserIDNumber = (maxUserID + 1).toString().padStart(3, '0');
-  return `stu${department}${academicYear.slice(-2)}${newUserIDNumber}`;
+  
+  if (userRole === 'student') {
+    return `stu${department}${academicYear.slice(-2)}${newUserIDNumber}`;
+  } else if (userRole === 'lecturer') {
+    return `lec${department}${newUserIDNumber}`;
+  } else if (userRole === 'admin') {
+    return `admin${department}${newUserIDNumber}`;
+  }
 };
+
+
 
 // function generateAvatar(userName) {
 //   const svg = createAvatar(style, {
@@ -125,7 +172,7 @@ const generateTempPassword=()=>Math.random().toString(36).slice (-8)
 
 const createUser =async ()=> {
 const tempPassword= 'abcd1234'
-const newUserID = await createUserID(department, academicYear);
+const newUserID = await createUserID(department, academicYear, userRole);
 const qrCodeData =`${newUserID}` ; 
 const qrCodeUrl = await QRCode.toDataURL(qrCodeData);
 console.log(newUserID ,"new user id")
@@ -186,12 +233,20 @@ const handleSubmit = async (event) => {
         <div className="grid grid-cols-2 gap-20">
         <div className="space-y-9">
               <Label htmlFor="role">User Role</Label>
-              <Input id="id" placeholder="Enter user Role" onChange={handleChange} name='userRole' value={userRole} />    
+              <div>
+              <label className="mr-2">Role:</label>
+              <select name="role" onChange={(e) => handleSelectChange('userRole', e.target.value)}  className="border rounded p-1">
+                <option value="student">Student</option>
+                <option value="lecturer">Lecturer</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+        
             </div>
             
             <div className="space-y-2">
             <Label htmlFor="subject">Department</Label>
-            <Select onValueChange={(value) => handleSelectChange('department', value)}>
+            <Select onValueChange={(value) => handleSelectChange('department', value) } disabled={userRole =='admin'}>
               <SelectTrigger id="department" >
                 <SelectValue placeholder="Select Department" />
               </SelectTrigger>
@@ -206,7 +261,7 @@ const handleSubmit = async (event) => {
         <div className="grid grid-cols-2 gap-6">
         <div className="space-y-2">
             <Label htmlFor="subject">Course</Label>
-            <Select onValueChange={(value) => handleSelectChange('course', value)} >
+            <Select onValueChange={(value) => handleSelectChange('course', value)}  disabled={userRole !== 'student'} >
               <SelectTrigger id="Course" >
                 <SelectValue placeholder="Select Course" />
               </SelectTrigger>
@@ -219,7 +274,7 @@ const handleSubmit = async (event) => {
             </div>
             <div className="space-y-2">
             <Label htmlFor="academic-year">Academic Year</Label>
-            <Input id="academic-year" placeholder="Enter academic year" onChange={handleChange}  name='academicYear' value={academicYear}/>
+            <Input id="academic-year" placeholder="Enter academic year" onChange={handleChange}  name='academicYear' value={academicYear}  disabled={userRole !== 'student'}/>
           </div>
         </div>
        

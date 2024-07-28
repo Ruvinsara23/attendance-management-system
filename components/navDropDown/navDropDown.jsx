@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useUserContext } from '@/app/context/userContext';
 import {Package2,CircleUser,} from "lucide-react"
-import { logout } from '@/utils/firebase/firebaseUtils';
+
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu'; 
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage,AvatarFallback } from '../ui/avatar';
@@ -9,13 +9,19 @@ import { Avatar, AvatarImage,AvatarFallback } from '../ui/avatar';
 
 
 const NavDropDown = () => {
+  // const [currentUser,setcurrentUser]=useState()
     const {signOut}=useUserContext()
+
     
 
 
    const handleLogout = async () => {
-        signOut()
-      
+    try {
+      await signOut();
+      alert("Logged out successfully!");
+    } catch (error) {
+     console.log(error.message);
+    }
       };
 
 

@@ -148,6 +148,8 @@ const studentDashboard = () => {
   
   //   };
 
+ 
+
   const userId = currentUser.userID;
 
   const fetchAndSetStuAttendance = async () => {
@@ -211,11 +213,9 @@ const studentDashboard = () => {
       link.click();
     }
   }
-    useEffect(()=>{
-      fetchAndSetQrCode(userId);
-      fetchAndSetStuAttendance()
-      updateCardData()
-    },[counts])
+    // useEffect(()=>{
+      
+    // },[counts])
 
     const getFilteredData = () => {
       return attendanceData.filter(entry => {
@@ -230,6 +230,22 @@ const studentDashboard = () => {
         return true;
       });
     };
+
+    useEffect(() => {
+      if (!currentUser) {
+        router.push('/login');
+        return;
+      }
+      fetchAndSetQrCode(userId);
+      fetchAndSetStuAttendance()
+      updateCardData()
+    }
+   ,[currentUser]
+  
+  )
+  if (!currentUser) {
+    return <div>Loading...</div>; // This handles the loading state
+  }
   
 
    

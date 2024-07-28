@@ -22,15 +22,15 @@ const navLinks = [
 const LectureHeader = () => {
   const {setCurrentUser}=useUserContext()
 
-  const handleLogout = async () => {
-   try {
-     await logout();
-     setCurrentUser(null);
-     alert("Logged out successfully!");
-   } catch (error) {
-    console.log(error.message);
-   }
- }
+//   const handleLogout = async () => {
+//    try {
+//      await logout();
+//      setCurrentUser(null);
+//      alert("Logged out successfully!");
+//    } catch (error) {
+//     console.log(error.message);
+//    }
+//  }
 
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b  px-4 md:px-6 bg-[#FBF6FE]">

@@ -20,7 +20,7 @@ const navLinks = [
     { href: '/adminDashboard/userManagement', text: 'Users', className: 'text-muted-foreground' },
     { href: '/adminDashboard/attendance', text: 'Attendance', className: 'text-muted-foreground' },
     // { href: '/adminDashboard/', text: 'Courses', className: 'text-muted-foreground' },
-    // { href: '/adminDashboard/profile', text: 'Profile', className: 'text-muted-foreground' },
+    { href: '/adminDashboard/profile', text: 'Profile', className: 'text-muted-foreground' },
   ];
   
 

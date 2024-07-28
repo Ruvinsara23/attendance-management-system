@@ -12,7 +12,10 @@ import { fetchAttendance } from '@/app/services/lectureFirestoreService'
 import AttendanceTable from '@/components/attendanceTable/attendanceTable'
 import { Card } from '@/components/ui/card'
 import { useUserContext } from '@/app/context/userContext'
-
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
+import { setDate } from 'date-fns'
 
 
 
@@ -26,6 +29,7 @@ const page = () => {
   const [status, setStatus] = useState('All');
   const {currentUser}=useUserContext()
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
     const fetchAndSetAttendance = async () => {
@@ -39,18 +43,23 @@ const page = () => {
 
   useEffect(() => {
     filterData();
-  }, [attendanceData, dateRange, subject, department, status,searchTerm]);
+  }, [attendanceData,dateRange, subject, department, status,searchTerm,selectedDate]);
 
   const filterData = () => {
     let data = [...attendanceData];
 
-    if (dateRange[0] && dateRange[1]) {
-      const [startDate, endDate] = dateRange;
+    
+    if (selectedDate) {
+      const filterDate = selectedDate
+      console.log("selected",selectedDate)
+      console.log("filter date",filterDate)
       data = data.filter(item => {
-        const itemDate = new Date(item.date);
-        return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
+        const itemDate = new Date(item.createdAt);
+        return itemDate === filterDate;
       });
     }
+    
+
 
     if (subject && subject !== 'All') {
       data = data.filter(item => item.subjectCode === subject);
@@ -77,7 +86,7 @@ const page = () => {
        
     
     }
-   // Replace with the desired student ID
+
 
    if (searchTerm) {
     data = data.filter(item => {
@@ -104,7 +113,38 @@ const page = () => {
   
 
   const downloadReport = () => {
-    // Implement download report logic
+    const doc = new jsPDF();
+    const data = filteredData;
+    const studentWiseData = {};
+
+
+    data.forEach(item => {
+      for (const studentId in item.attendance) {
+        if (!studentWiseData[studentId]) {
+          studentWiseData[studentId] = [];
+        }
+        studentWiseData[studentId].push({
+          subjectCode: item.subjectCode,
+          status: item.attendance[studentId] ? 'Present' : 'Absent',
+          date: (item.createdAt).toLocaleDateString(),
+        });
+      }
+    });
+
+    const tableRows = [];
+    for (const studentId in studentWiseData) {
+      studentWiseData[studentId].forEach(record => {
+        tableRows.push([studentId, record.subjectCode, record.status, record.date, record.time]);
+      });
+    }
+
+    
+    autoTable(doc, {
+      head: [['Student ID', 'Subject Code', 'Status', 'Date']],
+      body: tableRows
+    });
+
+    doc.save('attendance_report.pdf');
   };
 
   const uniqueSubjects = ['All', ...new Set(attendanceData.map(item => item.subjectCode))];
@@ -131,12 +171,12 @@ const page = () => {
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" className="w-full justify-start font-normal">
-                  Select date range
+   
                   <div className="ml-auto h-4 w-4 opacity-50" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <Calendar mode="range" onSelect={setDateRange} />
+                <Calendar mode="range" onSelect={setSelectedDate} />
               </PopoverContent>
             </Popover>
           </div>

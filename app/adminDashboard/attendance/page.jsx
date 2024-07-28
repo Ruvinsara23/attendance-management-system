@@ -89,7 +89,38 @@ const page = () => {
  
 
   const downloadReport = () => {
-    // Implement download report logic
+    const doc = new jsPDF();
+    const data = filteredData;
+    const studentWiseData = {};
+
+
+    data.forEach(item => {
+      for (const studentId in item.attendance) {
+        if (!studentWiseData[studentId]) {
+          studentWiseData[studentId] = [];
+        }
+        studentWiseData[studentId].push({
+          subjectCode: item.subjectCode,
+          status: item.attendance[studentId] ? 'Present' : 'Absent',
+          date: (item.createdAt).toLocaleDateString(),
+        });
+      }
+    });
+
+    const tableRows = [];
+    for (const studentId in studentWiseData) {
+      studentWiseData[studentId].forEach(record => {
+        tableRows.push([studentId, record.subjectCode, record.status, record.date, record.time]);
+      });
+    }
+
+    
+    autoTable(doc, {
+      head: [['Student ID', 'Subject Code', 'Status', 'Date']],
+      body: tableRows
+    });
+
+    doc.save('attendance_report.pdf');
   };
 
   const uniqueSubjects = ['All', ...new Set(attendanceData.map(item => item.subjectCode))];

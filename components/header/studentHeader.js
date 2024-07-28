@@ -39,11 +39,11 @@ const navLinks = [
   
 
 const StudentHeader = () => {
- const {setCurrentUser}=useUserContext()
+ const {setCurrentUser,signOut}=useUserContext()
 
  const handleLogout = async () => {
   try {
-    await logout();
+    await signOut();
     setCurrentUser(null);
     alert("Logged out successfully!");
   } catch (error) {
