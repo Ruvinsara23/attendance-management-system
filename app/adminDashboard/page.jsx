@@ -81,7 +81,7 @@ const page = () => {
           
         <div className="grid gap-6">
         <UserChart />
-        <AddData />
+      
       </div>
       </div>
     </main>
