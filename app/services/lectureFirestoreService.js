@@ -300,11 +300,11 @@ export const fetchSessions = async ({lecturerId}) => {
     return { sessions, appointments };
   };
 
-  export const fetchStudents=async()=>{
+  export const fetchStudents=async({department})=>{
     const studentQuery = query(
       collection(db, "users"),
       where("userRole", "==", "Student"),
-      where("department", "==", "eng")
+      where("department", "==", department )
     );
     const studentSnapshot = await getDocs(studentQuery);
 

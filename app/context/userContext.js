@@ -15,7 +15,17 @@ export const UserProvider =({children})=>{
     const router=useRouter()
          const value={currentUser,setCurrentUser}
          
-         
+         const signOut = async () => {
+          try {
+            router.push('/login');
+            await logout(auth);
+             
+            setCurrentUser(null);
+          } catch (error) {
+            console.error('Error logging out:', error);
+          }
+        };
+        
          useEffect(()=>{
             const unsubscribe=  onAuthStateChangedListner((user)=>{
               setCurrentUser(user)
@@ -24,16 +34,7 @@ export const UserProvider =({children})=>{
             return () => unsubscribe()
           },[])   
 
-          const signOut = async () => {
-            try {
-              router.push('/login');
-              await logout(auth);
-               
-              setCurrentUser(null);// Redirect to login page after logout
-            } catch (error) {
-              console.error('Error logging out:', error);
-            }
-          };
+          
     return (
         
         <UserContext.Provider value={{setCurrentUser, currentUser,signOut}}>{children}</UserContext.Provider>

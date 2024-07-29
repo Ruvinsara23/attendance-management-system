@@ -232,7 +232,7 @@ const fetchSubjects = async () => {
     
     export const fetchAttendanceForAdmin = async () => {
       try {
-          // Fetch all relevant data
+          
           const [courses, departments, subjects, attendance] = await Promise.all([
               fetchCourses(),
               fetchDepartments(),
@@ -240,19 +240,19 @@ const fetchSubjects = async () => {
               fetchAttendance()
           ]);
   
-          // Create a map from course IDs to department IDs
+         
           const courseToDepartmentMap = courses.reduce((map, course) => {
               map[course.id] = course.departmentId;
               return map;
           }, {});
   
-          // Create a map from department IDs to department names
+      
           const departmentMap = departments.reduce((map, department) => {
               map[department.id] = department.name;
               return map;
           }, {});
   
-          // Map subjects to include department names and course names
+         
           const subjectMap = subjects.map(subject => {
               const courseId = subject.courseId;
               const departmentId = courseToDepartmentMap[courseId];
@@ -266,13 +266,12 @@ const fetchSubjects = async () => {
 
 
   
-          // Create a map from subject codes to subject details
           const subjectCodeMap = subjectMap.reduce((map, subject) => {
               map[subject.code] = subject;
               return map;
           }, {});
   
-          // Enhance and filter attendance records
+       
           const enhancedAttendance = attendance.map(record => {
               const subjectDetails = subjectCodeMap[record.subjectCode];
               let createdAt = record.createdAt;
@@ -303,8 +302,7 @@ const fetchSubjects = async () => {
     const usersQuery = query(usersCollectionRef);
     const usersQuerySnapshot = await getDocs(usersQuery);
     const usersData = usersQuerySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  
-    // Fetch courses data
+
     const departmentsCollectionRef = collection(db, 'departments');
     const departmentsQuery = query(departmentsCollectionRef);
     const departmentsQuerySnapshot = await getDocs(departmentsQuery);

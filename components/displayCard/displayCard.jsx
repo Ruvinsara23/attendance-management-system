@@ -19,14 +19,20 @@ const
 DisplayCard = ({ session ,showActions = true,onStatusUpdate }) => {
   const [showQRScanner, setShowQRScanner] = useState(false);
 
+
+  
+
         
 const handleAction=async()=>{
 
    setShowQRScanner(true);
   
- 
-
 }
+
+const handleCancel=async()=>{
+  await updateSessionStatus({sessionID: session.id})
+}
+
 const handlFinish=async()=>{
   await updateSessionStatus({sessionID: session.id});
   if (onStatusUpdate) {
@@ -53,7 +59,7 @@ const handlFinish=async()=>{
       {showActions && (
       <div className="flex justify-between mb-2">
       
-        <Button variant="secondary" size="sm">
+        <Button variant="secondary" onClick={handleCancel} size="sm">
           Cancel
         </Button>
         <Button onClick={handleAction}  size="sm">

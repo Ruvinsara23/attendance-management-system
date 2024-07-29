@@ -11,6 +11,9 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { fetchAttendanceForAdmin } from '@/app/services/adminFirestoreService'
 import AttendanceTable from '@/components/attendanceTable/attendanceTable'
 import { useUserContext } from '@/app/context/userContext'
+import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
+import jsPDF from 'jspdf';
 
 
 

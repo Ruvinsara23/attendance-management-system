@@ -31,11 +31,12 @@ const ApointmentFormLec = ({currentUser,onAppointmentCreated}) => {
     const [student,setStudent]=useState([])
     const [formFields,setFormFields]=useState(defaultFormFields)
     const {studentName,studentId,date,time,subject,message,lecturer,lecturerId}=formFields
+   
   
 
     useEffect(() => {
         const fetchAndSetStudents = async () => {
-          const studentsData = await fetchStudents();
+          const studentsData = await fetchStudents({department:currentUser.department});
           setStudent(studentsData);
         };
     

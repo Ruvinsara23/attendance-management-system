@@ -171,7 +171,7 @@ const createUserID = async (department, academicYear, userRole) => {
 const generateTempPassword=()=>Math.random().toString(36).slice (-8)
 
 const createUser =async ()=> {
-const tempPassword= 'abcd1234'
+const tempPassword= generateTempPassword()
 const newUserID = await createUserID(department, academicYear, userRole);
 const qrCodeData =`${newUserID}` ; 
 const qrCodeUrl = await QRCode.toDataURL(qrCodeData);
@@ -201,8 +201,8 @@ try {
 
 await
 console.log("User document created in Firestore");
-// sendPasswordResetEmail(auth,email);
-// console.log("Password reset Email sent to:",email);
+sendPasswordResetEmail(auth,email);
+console.log("Password reset Email sent to:",email);
 }
 
 catch (error){
@@ -293,7 +293,7 @@ const handleSubmit = async (event) => {
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="address">Address</Label>
-              <Textarea id="address" placeholder="Enter address" onChange={handleChange} name=' address' value={ address} />
+              <Textarea id="address" placeholder="Enter address" onChange={handleChange} name='address' value={address} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
